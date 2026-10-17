@@ -1,26 +1,981 @@
 @import "tailwindcss";
 
+/*
+  Brand: Figma #00CBD9 / #17786C + Gramatika + ITC products.
+  Craft: Linear (less chrome, more content contrast),
+  bento dashboards (tile size = priority), campus kiosks
+  (large targets, clean home, progressive disclosure).
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --heimdall-primary: #00cbd9;
+  --heimdall-primary-soft: #5fe0ea;
+  --heimdall-blue: #38aaff;
+  --heimdall-accent: #17786c;
+  --heimdall-bg: #f5f6f7;
+  --heimdall-bg-elevated: #ffffff;
+  --heimdall-bg-muted: #eceef0;
+  --heimdall-fg: #111314;
+  --heimdall-fg-muted: #5c656a;
+  --heimdall-border: rgba(17, 19, 20, 0.08);
+  --heimdall-border-strong: rgba(17, 19, 20, 0.14);
+  --heimdall-ok: #17786c;
+  --heimdall-warn: #b7791f;
+  --heimdall-critical: #c23b3b;
+  --heimdall-glow: color-mix(in srgb, var(--heimdall-primary) 14%, transparent);
+  --heimdall-radius: 0;
+  --heimdall-radius-sm: 0;
+  --heimdall-gap: 0.875rem;
+  --heimdall-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --heimdall-ink-on-primary: #042428;
+  --heimdall-shadow: 0 1px 2px rgba(17, 19, 20, 0.04),
+    0 8px 24px rgba(17, 19, 20, 0.04);
+  color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --heimdall-bg: #090a0b;
+    --heimdall-bg-elevated: #121416;
+    --heimdall-bg-muted: #0e1012;
+    --heimdall-fg: #f4f6f7;
+    --heimdall-fg-muted: rgba(244, 246, 247, 0.62);
+    --heimdall-border: rgba(255, 255, 255, 0.07);
+    --heimdall-border-strong: rgba(255, 255, 255, 0.12);
+    --heimdall-glow: color-mix(in srgb, var(--heimdall-primary) 10%, transparent);
+    --heimdall-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 10px 30px rgba(0, 0, 0, 0.28);
+    color-scheme: dark;
   }
 }
 
+@theme inline {
+  --color-background: var(--heimdall-bg);
+  --color-foreground: var(--heimdall-fg);
+  --color-primary: var(--heimdall-primary);
+  --color-primary-soft: var(--heimdall-primary-soft);
+  --color-blue: var(--heimdall-blue);
+  --color-accent: var(--heimdall-accent);
+  --color-elevated: var(--heimdall-bg-elevated);
+  --color-muted: var(--heimdall-bg-muted);
+  --color-fg-muted: var(--heimdall-fg-muted);
+  --color-border: var(--heimdall-border);
+  --color-ok: var(--heimdall-ok);
+  --color-warn: var(--heimdall-warn);
+  --color-critical: var(--heimdall-critical);
+  --font-sans: var(--font-gramatika), "Gramatika", "Segoe UI", Arial, Helvetica,
+    sans-serif;
+  --font-display: var(--font-gramatika-shifted), var(--font-gramatika),
+    "Gramatika", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --radius-panel: var(--heimdall-radius);
+  --radius-control: var(--heimdall-radius-sm);
+  --shadow-panel: var(--heimdall-shadow);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  margin: 0;
+  background: var(--heimdall-bg);
+  color: var(--heimdall-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--heimdall-primary) 28%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--heimdall-primary);
+  outline-offset: 3px;
+}
+
+.heimdall-shell {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      900px 480px at 100% -10%,
+      var(--heimdall-glow),
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--heimdall-primary) 4%, transparent),
+      transparent 28%
+    ),
+    var(--heimdall-bg);
+}
+
+/* Bifröst — open bridge, warmer prismatic wash */
+.heimdall-shell[data-product="bifrost"] {
+  background:
+    radial-gradient(
+      720px 420px at 12% -8%,
+      color-mix(in srgb, var(--heimdall-blue) 16%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      880px 460px at 92% 0%,
+      color-mix(in srgb, var(--heimdall-primary) 18%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--heimdall-accent) 6%, transparent),
+      transparent 32%
+    ),
+    var(--heimdall-bg);
+}
+
+.heimdall-shell[data-product="bifrost"]::before {
+  opacity: 0.12;
+  background-size: 56px 56px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 70%);
+}
+
+/* Heimdall — denser watchtower HUD */
+.heimdall-shell[data-product="heimdall"] {
+  background:
+    radial-gradient(
+      640px 380px at 50% -12%,
+      color-mix(in srgb, var(--heimdall-primary) 14%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--heimdall-primary) 5%, transparent),
+      transparent 22%
+    ),
+    var(--heimdall-bg);
+}
+
+.heimdall-shell[data-product="heimdall"]::before {
+  opacity: 0.28;
+  background-size: 40px 40px;
+}
+
+.heimdall-shell[data-product="heimdall"]::after {
+  opacity: 0.05;
+}
+
+.heimdall-shell[data-product="bifrost"] .heimdall-section__rule {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--heimdall-blue) 50%, transparent),
+    color-mix(in srgb, var(--heimdall-primary) 55%, transparent) 40%,
+    color-mix(in srgb, var(--heimdall-border) 70%, transparent) 75%,
+    transparent
+  );
+}
+
+.heimdall-shell[data-product="heimdall"] .heimdall-section__rule {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--heimdall-primary) 70%, transparent),
+    color-mix(in srgb, var(--heimdall-border) 80%, transparent) 50%,
+    transparent
+  );
+}
+
+.heimdall-shell[data-product="heimdall"] .heimdall-panel {
+  box-shadow:
+    var(--heimdall-shadow),
+    0 0 0 1px color-mix(in srgb, var(--heimdall-primary) 6%, transparent);
+}
+
+/* Cyberpunk HUD grid + scanlines (kept subtle) */
+.heimdall-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.22;
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--heimdall-primary) 16%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--heimdall-primary) 12%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, #000 20%, transparent 75%);
+}
+
+.heimdall-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.035;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    color-mix(in srgb, var(--heimdall-fg) 35%, transparent) 3px
+  );
+  mix-blend-mode: soft-light;
+}
+
+@media (prefers-color-scheme: light) {
+  .heimdall-shell[data-product="bifrost"]::before {
+    opacity: 0.08;
+  }
+
+  .heimdall-shell[data-product="heimdall"]::before {
+    opacity: 0.16;
+  }
+
+  .heimdall-shell::after {
+    opacity: 0.02;
+  }
+
+  .heimdall-shell[data-product="heimdall"]::after {
+    opacity: 0.03;
+  }
+}
+
+.heimdall-layout {
+  width: 100%;
+  min-height: 0;
+}
+
+.heimdall-section__title {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--heimdall-fg);
+}
+
+.heimdall-section__rule {
+  display: block;
+  flex: 1;
+  height: 1px;
+  min-width: 2rem;
+  margin-bottom: 0.35rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--heimdall-primary) 55%, transparent),
+    color-mix(in srgb, var(--heimdall-border) 80%, transparent) 55%,
+    transparent
+  );
+}
+
+.heimdall-grid {
+  display: grid;
+  gap: var(--heimdall-gap);
+  width: 100%;
+  min-height: 0;
+}
+
+@media (max-width: 767px) {
+  .heimdall-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: none !important;
+    height: auto;
+  }
+
+  .heimdall-grid-cell {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    min-height: 10.5rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .heimdall-grid[data-mode="stats"] {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+}
+
+.heimdall-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--heimdall-border);
+  border-radius: var(--heimdall-radius);
+  background: var(--heimdall-bg-elevated);
+  box-shadow: var(--heimdall-shadow);
+  min-height: 0;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Tech corner brackets */
+.heimdall-panel::before,
+.heimdall-panel::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  opacity: 0.7;
+  z-index: 2;
+}
+
+.heimdall-panel::before {
+  top: 8px;
+  left: 8px;
+  border-top: 1.5px solid var(--heimdall-primary);
+  border-left: 1.5px solid var(--heimdall-primary);
+  box-shadow: -1px -1px 8px color-mix(in srgb, var(--heimdall-primary) 35%, transparent);
+}
+
+.heimdall-panel::after {
+  right: 8px;
+  bottom: 8px;
+  border-right: 1.5px solid var(--heimdall-accent);
+  border-bottom: 1.5px solid var(--heimdall-accent);
+  box-shadow: 1px 1px 8px color-mix(in srgb, var(--heimdall-accent) 30%, transparent);
+}
+
+.heimdall-kpi {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
+
+.heimdall-pill {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--heimdall-border-strong);
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--heimdall-bg-muted) 80%, transparent);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+  color: var(--heimdall-fg-muted);
+}
+
+.heimdall-pill-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: var(--heimdall-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--heimdall-primary) 22%, transparent);
+}
+
+.heimdall-action {
+  background: var(--heimdall-primary);
+  color: var(--heimdall-ink-on-primary);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--heimdall-primary) 40%, transparent),
+    0 0 18px color-mix(in srgb, var(--heimdall-primary) 35%, transparent);
+}
+
+.heimdall-search {
+  display: flex;
+  width: min(100%, 28rem);
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  border: 1px solid var(--heimdall-border-strong);
+  border-radius: 0;
+  background: var(--heimdall-bg-elevated);
+  padding: 0.65rem 1.1rem;
+  box-shadow: var(--heimdall-shadow);
+  color: var(--heimdall-fg-muted);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.heimdall-search--wide {
+  width: 100%;
+}
+
+.heimdall-search:focus-within {
+  border-color: color-mix(in srgb, var(--heimdall-primary) 55%, transparent);
+  box-shadow:
+    var(--heimdall-shadow),
+    0 0 0 3px color-mix(in srgb, var(--heimdall-primary) 18%, transparent);
+}
+
+.heimdall-search input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--heimdall-fg);
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+.heimdall-search input::placeholder {
+  color: var(--heimdall-fg-muted);
+}
+
+.heimdall-icon-tile {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--heimdall-primary) 12%, transparent);
+  color: var(--heimdall-primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--heimdall-primary) 22%, transparent);
+}
+
+.heimdall-logo,
+.bifrost-logo {
+  display: block;
+  transition:
+    filter 0.25s ease,
+    transform 0.25s ease;
+}
+
+.heimdall-logo {
+  filter: drop-shadow(
+    0 0 10px color-mix(in srgb, var(--heimdall-primary) 35%, transparent)
+  );
+}
+
+.heimdall-logo:hover {
+  filter: drop-shadow(
+    0 0 16px color-mix(in srgb, var(--heimdall-primary) 55%, transparent)
+  );
+  transform: translateY(-1px);
+}
+
+.bifrost-logo {
+  filter: drop-shadow(
+    0 0 10px color-mix(in srgb, var(--heimdall-blue) 32%, transparent)
+  );
+}
+
+.bifrost-logo:hover {
+  filter: drop-shadow(
+    0 0 16px color-mix(in srgb, var(--heimdall-blue) 48%, transparent)
+  );
+  transform: translateY(-1px);
+}
+
+.heimdall-wordmark {
+  position: relative;
+  display: inline-block;
+}
+
+.heimdall-wordmark::before,
+.heimdall-wordmark::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.heimdall-wordmark:hover::before,
+.heimdall-wordmark:hover::after {
+  opacity: 0.55;
+}
+
+.heimdall-wordmark:hover::before {
+  color: #00cbd9;
+  transform: translate(1px, -1px);
+  mix-blend-mode: screen;
+  animation: heimdall-glitch 0.7s steps(2, end) infinite;
+}
+
+.heimdall-wordmark:hover::after {
+  color: #17786c;
+  transform: translate(-1px, 1px);
+  mix-blend-mode: screen;
+  animation: heimdall-glitch 0.7s steps(2, end) infinite reverse;
+}
+
+.heimdall-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--heimdall-primary) 85%, var(--heimdall-fg-muted));
+}
+
+@keyframes heimdall-glitch {
+  0%,
+  100% {
+    clip-path: inset(0 0 60% 0);
+  }
+  50% {
+    clip-path: inset(40% 0 0 0);
+  }
+}
+
+.heimdall-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 1.5rem;
+  background: #07090b;
+  color: #f4f6f7;
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s ease;
+}
+
+.heimdall-boot--leave {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.heimdall-boot__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.heimdall-boot__telescreen {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 55% 45% at 50% 48%,
+      color-mix(in srgb, #00cbd9 18%, transparent),
+      transparent 70%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 203, 217, 0.04) 4px
+    ),
+    #07090b;
+}
+
+.heimdall-boot__telescreen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 203, 217, 0.07) 50%,
+    transparent 100%
+  );
+  background-size: 100% 220%;
+  animation: heimdall-boot-scan 3.6s linear infinite;
+  opacity: 0.7;
+}
+
+.heimdall-boot__eye {
+  width: min(92vw, 620px);
+  height: min(92vw, 620px);
+  opacity: 0.38;
+  animation: heimdall-boot-eye 4.8s ease-in-out infinite;
+}
+
+.watching-eye__pupil {
+  transform-origin: 100px 100px;
+  animation: heimdall-boot-look 5.5s ease-in-out infinite;
+}
+
+.heimdall-boot__orwell {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: clamp(0.65rem, 1.8vw, 0.78rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #00cbd9 55%, transparent);
+  white-space: nowrap;
+  opacity: 0.55;
+}
+
+.heimdall-boot__orwell--ru {
+  top: auto;
+  bottom: 10%;
+  letter-spacing: 0.28em;
+  font-size: clamp(0.58rem, 1.5vw, 0.7rem);
+  color: color-mix(in srgb, #7af0f6 40%, transparent);
+  opacity: 0.4;
+}
+
+.heimdall-boot__corners {
+  position: absolute;
+  inset: 1.25rem;
+}
+
+.heimdall-boot__corners span {
+  position: absolute;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-color: color-mix(in srgb, #00cbd9 55%, transparent);
+  border-style: solid;
+}
+
+.heimdall-boot__corners span:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-width: 1.5px 0 0 1.5px;
+}
+
+.heimdall-boot__corners span:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-width: 1.5px 1.5px 0 0;
+}
+
+.heimdall-boot__corners span:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 1.5px 1.5px;
+}
+
+.heimdall-boot__corners span:nth-child(4) {
+  right: 0;
+  bottom: 0;
+  border-width: 0 1.5px 1.5px 0;
+}
+
+.heimdall-boot__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  max-width: 34rem;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 1.25rem;
+  border: 1px solid color-mix(in srgb, #00cbd9 18%, transparent);
+  background: color-mix(in srgb, #07090b 72%, transparent);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 40px color-mix(in srgb, #00cbd9 12%, transparent);
+}
+
+.heimdall-boot__observe {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #00cbd9 80%, #f4f6f7);
+}
+
+.heimdall-boot__inner .heimdall-wordmark {
+  color: #f4f6f7;
+}
+
+.heimdall-boot__inner .heimdall-tag {
+  color: color-mix(in srgb, #00cbd9 75%, #f4f6f7);
+}
+
+.heimdall-boot__quote {
+  margin: 1.75rem 0 0;
+  min-height: 5.5rem;
+  padding: 0;
+  border: 0;
+}
+
+.heimdall-boot__quote p {
+  margin: 0;
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  line-height: 1.55;
+  color: rgba(244, 246, 247, 0.92);
+}
+
+.heimdall-boot__quote footer {
+  margin-top: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 246, 247, 0.48);
+}
+
+@keyframes heimdall-boot-eye {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.34;
+    filter: drop-shadow(0 0 28px rgba(0, 203, 217, 0.25));
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.48;
+    filter: drop-shadow(0 0 48px rgba(0, 203, 217, 0.45));
+  }
+}
+
+@keyframes heimdall-boot-look {
+  0%,
+  18%,
+  100% {
+    transform: translate(0, 0);
+  }
+  28% {
+    transform: translate(3px, -1.5px);
+  }
+  48% {
+    transform: translate(-2.5px, 1px);
+  }
+  68% {
+    transform: translate(1.5px, 2px);
+  }
+}
+
+@keyframes heimdall-boot-scan {
+  0% {
+    background-position: 0 -40%;
+  }
+  100% {
+    background-position: 0 140%;
+  }
+}
+
+/* —— Bifröst boot: bridge draws between realms —— */
+.heimdall-boot[data-product="bifrost"] {
+  background:
+    radial-gradient(
+      ellipse 70% 50% at 50% 42%,
+      rgba(56, 170, 255, 0.14),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 55% 40% at 18% 70%,
+      rgba(23, 120, 108, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 55% 40% at 82% 70%,
+      rgba(0, 203, 217, 0.12),
+      transparent 60%
+    ),
+    #060a0e;
+}
+
+.bifrost-boot__sky {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(56, 170, 255, 0.08) 0%,
+      transparent 42%,
+      rgba(7, 12, 16, 0.55) 100%
+    ),
+    repeating-linear-gradient(
+      95deg,
+      transparent,
+      transparent 48px,
+      rgba(122, 240, 246, 0.025) 49px
+    );
+}
+
+.bifrost-boot__bridge {
+  width: min(96vw, 920px);
+  height: auto;
+  opacity: 0.92;
+  transform: translateY(4%);
+}
+
+.bifrost-boot__caption {
+  position: absolute;
+  top: 11%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: clamp(0.65rem, 1.8vw, 0.78rem);
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #38aaff 65%, transparent);
+  white-space: nowrap;
+  opacity: 0.6;
+}
+
+.bifrost-boot__caption--ru {
+  top: auto;
+  bottom: 9%;
+  letter-spacing: 0.22em;
+  font-size: clamp(0.58rem, 1.5vw, 0.7rem);
+  color: color-mix(in srgb, #7af0f6 45%, transparent);
+  opacity: 0.42;
+}
+
+.heimdall-boot[data-product="bifrost"] .heimdall-boot__inner {
+  border-color: color-mix(in srgb, #38aaff 22%, transparent);
+  box-shadow: 0 0 44px color-mix(in srgb, #38aaff 14%, transparent);
+  background: color-mix(in srgb, #060a0e 68%, transparent);
+}
+
+.heimdall-boot[data-product="bifrost"] .heimdall-boot__observe {
+  color: color-mix(in srgb, #38aaff 85%, #f4f6f7);
+}
+
+.bifrost-bridge__arc {
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  animation: bifrost-arc-draw 2.4s ease forwards;
+}
+
+.bifrost-bridge__arc--1 {
+  animation-delay: 0.05s;
+}
+
+.bifrost-bridge__arc--2 {
+  animation-delay: 0.22s;
+}
+
+.bifrost-bridge__arc--3 {
+  animation-delay: 0.4s;
+}
+
+.bifrost-bridge__arc--4 {
+  animation-delay: 0.55s;
+}
+
+.bifrost-bridge__pillar {
+  opacity: 0;
+  animation: bifrost-pillar-rise 0.9s ease forwards;
+}
+
+.bifrost-bridge__pillar--left {
+  animation-delay: 0s;
+}
+
+.bifrost-bridge__pillar--right {
+  animation-delay: 0.12s;
+}
+
+.bifrost-bridge__aurora {
+  opacity: 0.35;
+  animation: bifrost-aurora 3.8s ease-in-out infinite;
+  transform-origin: 400px 160px;
+}
+
+.bifrost-bridge__path {
+  stroke-dasharray: 420;
+  stroke-dashoffset: 420;
+  animation: bifrost-arc-draw 1.8s ease 0.7s forwards;
+}
+
+.bifrost-bridge__traveler {
+  opacity: 0;
+  animation: bifrost-traveler-fade 0.4s ease 1.1s forwards;
+}
+
+@keyframes bifrost-arc-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes bifrost-pillar-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bifrost-aurora {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bifrost-traveler-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heimdall-panel,
+  .heimdall-search,
+  .heimdall-logo,
+  .bifrost-logo {
+    transition: none;
+  }
+
+  .heimdall-wordmark:hover::before,
+  .heimdall-wordmark:hover::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .heimdall-shell::after {
+    opacity: 0.02;
+  }
+
+  .heimdall-boot__eye,
+  .watching-eye__pupil,
+  .heimdall-boot__telescreen::after,
+  .bifrost-bridge__arc,
+  .bifrost-bridge__pillar,
+  .bifrost-bridge__aurora,
+  .bifrost-bridge__path,
+  .bifrost-bridge__traveler {
+    animation: none;
+  }
+
+  .bifrost-bridge__arc,
+  .bifrost-bridge__path {
+    stroke-dashoffset: 0;
+  }
+
+  .bifrost-bridge__pillar,
+  .bifrost-bridge__traveler {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1080px) and (min-height: 1600px) and (orientation: portrait) {
+  :root {
+    --heimdall-gap: 1rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --heimdall-gap: 1.15rem;
+  }
 }
