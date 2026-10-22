@@ -1,4 +1,4 @@
-export type AppMode = "kiosk" | "stats";
+export type AppMode = "kiosk" | "stats" | "monitoring";
 
 /** Content categories — widgets are grouped into layout sections by this */
 export type WidgetCategory = "info" | "media" | "events" | "projects";

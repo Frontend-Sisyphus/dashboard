@@ -57,7 +57,9 @@ export function BifrostLogo({
         y="5"
         width="54"
         height="54"
-        fill="#0b1114"
+        rx="2"
+        className="logo-bg"
+        fill="var(--heimdall-logo-bg, #0b1114)"
         stroke={`url(#${prism})`}
         strokeWidth="1.4"
         opacity="0.95"

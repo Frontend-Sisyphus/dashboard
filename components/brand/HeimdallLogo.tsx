@@ -56,7 +56,8 @@ export function HeimdallLogo({
         width="56"
         height="56"
         rx="2"
-        fill="#0b1114"
+        className="logo-bg"
+        fill="var(--heimdall-logo-bg, #0b1114)"
         stroke={`url(#${bifrost})`}
         strokeWidth="1.5"
       />

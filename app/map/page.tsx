@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ProductLogo } from "@/components/brand/ProductLogo";
-import { itcLinks } from "@/lib/itc/links";
+import { ProductLogo } from "@/entities/brand";
+import { itcLinks } from "@/shared/lib/itc";
 
 export const metadata = {
   title: "Карта корпусов · Bifröst",

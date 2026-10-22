@@ -4,37 +4,12 @@ export interface BootQuote {
 }
 
 /**
- * For students + Heimdall brand: Hávamál / Edda wisdom first,
- * with a few classic lines from science and learning.
+ * Цитаты для Bifröst (студенчество, познание, мудрость Эдды)
  */
-export const bootQuotes: BootQuote[] = [
+export const bifrostQuotes: BootQuote[] = [
   {
     text: "Мудр тот, кто многое спрашивает и многое узнаёт.",
     source: "Старшая Эдда · Речи Высокого",
-  },
-  {
-    text: "Средний ум — лучший у людей: в жизни не нужно чересчур умного.",
-    source: "Старшая Эдда · Речи Высокого",
-  },
-  {
-    text: "Друг о друге должны помнить друзья и обмениваться дарами; смех на смех, лукавство на лукавство.",
-    source: "Старшая Эдда · Речи Высокого",
-  },
-  {
-    text: "Лучше носить ношу свою, чем просить у другого; лучше свой дом, чем чужой кров.",
-    source: "Старшая Эдда · Речи Высокого",
-  },
-  {
-    text: "Молчаливый кажется мудрым, пока не заговорит. Пустой человек болтает без нужды.",
-    source: "Старшая Эдда · Речи Высокого",
-  },
-  {
-    text: "Глупый думает, что знает всё, если сидит в уголке. Но не знает, как ответить, когда его спрашивают.",
-    source: "Старшая Эдда · Речи Высокого",
-  },
-  {
-    text: "Хеймдалль видит на сто переходов вперёд и слышит, как растёт трава.",
-    source: "Младшая Эдда · о страже Биврёста",
   },
   {
     text: "Знание — сила, если им умеют пользоваться.",
@@ -56,6 +31,20 @@ export const bootQuotes: BootQuote[] = [
     text: "Сначала научись быть полезным — потом удивляй мир.",
     source: "по мотивам Речей Высокого",
   },
+];
+
+/**
+ * Цитаты для Heimdall (наблюдение за сообществом, стража моста)
+ */
+export const heimdallQuotes: BootQuote[] = [
+  {
+    text: "Хеймдалль видит на сто переходов вперёд и слышит, как растёт трава.",
+    source: "Младшая Эдда · о страже Биврёста",
+  },
+  {
+    text: "Друг о друге должны помнить друзья и обмениваться дарами.",
+    source: "Старшая Эдда · Речи Высокого",
+  },
   {
     text: "Кто контролирует прошлое, тот контролирует будущее.",
     source: "Джордж Оруэлл · 1984",
@@ -66,7 +55,68 @@ export const bootQuotes: BootQuote[] = [
   },
 ];
 
-export function pickBootQuote(seed = Date.now()): BootQuote {
-  const index = Math.abs(seed) % bootQuotes.length;
-  return bootQuotes[index]!;
+/**
+ * Цитаты для Gjallarhorn (SRE, надежность, телеметрия, мониторинг)
+ */
+export const gjallarhornQuotes: BootQuote[] = [
+  {
+    text: "Надежда — это не стратегия управления инцидентами.",
+    source: "Google SRE (Site Reliability Engineering)",
+  },
+  {
+    text: "Всё падает постоянно. Вопрос лишь в том, насколько быстро ты услышишь сигнал тревоги.",
+    source: "Вернер Фогельс · CTO Amazon",
+  },
+  {
+    text: "Узнай о сбое из телеметрии за секунды, а не из сообщений пользователей через час.",
+    source: "Принцип превентивного мониторинга ИТС",
+  },
+  {
+    text: "Сложные системы не бывают абсолютно исправны — они лишь непрерывно компенсируют ошибки.",
+    source: "Ричард Кук · How Complex Systems Fail",
+  },
+  {
+    text: "Если ты не можешь это измерить — ты не можешь этим управлять.",
+    source: "Питер Друкер",
+  },
+  {
+    text: "Автоматизируй всё, что повторяется больше одного раза.",
+    source: "Google SRE Principles",
+  },
+  {
+    text: "Инцидент — это не провал, а непреднамеренный стресс-тест архитектуры.",
+    source: "John Allspaw · Adaptive Capacity",
+  },
+  {
+    text: "Бюджет ошибок существует для того, чтобы двигаться вперед, не жертвуя стабильностью.",
+    source: "SRE Error Budgets",
+  },
+  {
+    text: "Голос рога Гьяллархорн предупреждает задолго до того, как упадет последний сервер.",
+    source: "Гьяллархорн · Дозор ИТС",
+  },
+  {
+    text: "Мониторинг должен говорить не о том, что сломалось внутри, а о том, страдают ли пользователи.",
+    source: "Симптоматический мониторинг · Google SRE",
+  },
+];
+
+export const bootQuotes: BootQuote[] = [
+  ...bifrostQuotes,
+  ...heimdallQuotes,
+  ...gjallarhornQuotes,
+];
+
+export function pickBootQuote(mode?: string, seed = Date.now()): BootQuote {
+  let pool = bootQuotes;
+  if (mode === "monitoring" || mode === "gjallarhorn") {
+    pool = gjallarhornQuotes;
+  } else if (mode === "stats" || mode === "heimdall") {
+    pool = heimdallQuotes;
+  } else if (mode === "kiosk" || mode === "bifrost") {
+    pool = bifrostQuotes;
+  }
+
+  const index = Math.abs(seed) % pool.length;
+  return pool[index]!;
 }

@@ -1,6 +1,6 @@
 import type { AppMode } from "@/lib/layout/types";
 
-export type ProductId = "bifrost" | "heimdall";
+export type ProductId = "bifrost" | "heimdall" | "gjallarhorn";
 
 export type ProductBrand = {
   id: ProductId;
@@ -22,9 +22,10 @@ export type ProductBrand = {
 };
 
 /**
- * Две стороны одной пары из Эдды:
- * Биврёст — мост для студентов (сведения и сервисы).
- * Хеймдалль — страж моста (наблюдение и сводки).
+ * Три стороны Эдды в цифровой экосистеме ИТС:
+ * Биврёст — радужный мост для студентов (сервисы и навигация).
+ * Хеймдалль — страж моста (наблюдение за сообществом и сводки).
+ * Гьяллархорн — рог стража (мониторинг, пульс серверов и телеметрия проектов).
  */
 export const products: Record<ProductId, ProductBrand> = {
   bifrost: {
@@ -43,16 +44,29 @@ export const products: Record<ProductId, ProductBrand> = {
     id: "heimdall",
     mode: "stats",
     name: "Heimdall",
-    gloss: "наблюдение",
-    tagline: "страж моста · сводки ИТС",
-    loadingLine: "стража на посту…",
+    gloss: "статистика проектов",
+    tagline: "статистика и аналитика проектов ИТС",
+    loadingLine: "собираем метрики и прогресс проектов…",
     welcomeTitle: "Heimdall",
     welcomeBody:
-      "Страж Bifröst: участники, проекты и состояние сервисов ИТС на одном экране наблюдения.",
-    statusPill: "наблюдение ведётся",
+      "Страж Bifröst: всесторонняя статистика, прогресс дорожных карт, спринты и инженерные показатели проектов сообщества ИТС.",
+    statusPill: "статистика актуальна",
+  },
+  gjallarhorn: {
+    id: "gjallarhorn",
+    mode: "monitoring",
+    name: "Gjallarhorn",
+    gloss: "мониторинг проектов",
+    tagline: "мониторинг проектов ИТС",
+    loadingLine: "сканируем узлы и службы…",
+    welcomeTitle: "Gjallarhorn",
+    welcomeBody:
+      "Голос рога Хеймдалля: оперативный мониторинг доступности, телеметрия серверов, uptime и активность пользователей проектов ИТС в реальном времени.",
+    statusPill: "системы под контролем",
   },
 };
 
 export function productForMode(mode: AppMode): ProductBrand {
+  if (mode === "monitoring") return products.gjallarhorn;
   return mode === "stats" ? products.heimdall : products.bifrost;
 }

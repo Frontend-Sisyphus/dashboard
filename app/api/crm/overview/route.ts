@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCrmOverview } from "@/lib/crm/overview";
+import { getCrmOverview } from "@/entities/crm";
 
 export const dynamic = "force-dynamic";
 

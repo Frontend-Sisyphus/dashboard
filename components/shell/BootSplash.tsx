@@ -22,6 +22,7 @@ export function BootSplash({
 }: BootSplashProps) {
   const product: ProductBrand = productForMode(mode);
   const isBifrost = product.id === "bifrost";
+  const isGjallarhorn = product.id === "gjallarhorn";
   const [quote, setQuote] = useState<BootQuote | null>(null);
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
@@ -29,8 +30,8 @@ export function BootSplash({
   onFinishedRef.current = onFinished;
 
   useEffect(() => {
-    setQuote(pickBootQuote());
-  }, []);
+    setQuote(pickBootQuote(mode));
+  }, [mode]);
 
   useEffect(() => {
     let cancelled = false;
@@ -88,6 +89,15 @@ export function BootSplash({
               мост между университетом и знанием
             </p>
           </>
+        ) : isGjallarhorn ? (
+          <>
+            <div className="gjallarhorn-boot__grid" />
+            <div className="gjallarhorn-boot__sonar" />
+            <p className="bifrost-boot__caption">голос рога стража</p>
+            <p className="bifrost-boot__caption bifrost-boot__caption--ru">
+              телеметрия и мониторинг цифровых систем
+            </p>
+          </>
         ) : (
           <>
             <div className="heimdall-boot__telescreen" />
@@ -108,7 +118,11 @@ export function BootSplash({
 
       <div className="heimdall-boot__inner">
         <p className="heimdall-boot__observe">
-          {isBifrost ? "мост открывается" : "наблюдение ведётся"}
+          {isBifrost
+            ? "мост открывается"
+            : isGjallarhorn
+            ? "сканирование узлов"
+            : "наблюдение ведётся"}
         </p>
         <p
           className="heimdall-wordmark mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl"

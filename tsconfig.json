@@ -19,7 +19,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/views/*": ["./views/*"],
+      "@/widgets/*": ["./widgets/*"],
+      "@/features/*": ["./features/*"],
+      "@/entities/*": ["./entities/*"],
+      "@/shared/*": ["./shared/*"]
     }
   },
   "include": [

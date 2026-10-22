@@ -156,5 +156,20 @@ export const defaultLayoutConfig: LayoutConfig = {
         },
       ],
     },
+    monitoring: {
+      mode: "monitoring",
+      columns: "repeat(12, minmax(0, 1fr))",
+      rows: "auto",
+      widgets: [
+        {
+          id: "monitoring-main",
+          type: "projects-status",
+          title: "Мониторинг и телеметрия проектов ИТС",
+          category: "projects",
+          visible: true,
+          position: { col: 1, row: 1, colSpan: 12, rowSpan: 1 },
+        },
+      ],
+    },
   },
 };

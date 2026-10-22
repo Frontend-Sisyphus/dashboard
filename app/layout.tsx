@@ -46,6 +46,33 @@ const gramatikaShifted = localFont({
   display: "swap",
 });
 
+const ptRoot = localFont({
+  src: [
+    {
+      path: "./fonts/pt-root/PTRootUI-Light.ttf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/pt-root/PTRootUI-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/pt-root/PTRootUI-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/pt-root/PTRootUI-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-pt-root",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Bifröst · Heimdall · ИТС",
   description:
@@ -69,9 +96,29 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="ru"
-      className={`${gramatika.variable} ${gramatikaShifted.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${ptRoot.variable} ${gramatika.variable} ${gramatikaShifted.variable} h-full antialiased`}
     >
-      <body className={`${gramatika.className} min-h-full`}>{children}</body>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('itc-theme');
+                  if (saved === 'light' || saved === 'dark') {
+                    document.documentElement.setAttribute('data-theme', saved);
+                  } else {
+                    var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className={`${ptRoot.className} min-h-full font-sans`}>{children}</body>
     </html>
   );
 }
