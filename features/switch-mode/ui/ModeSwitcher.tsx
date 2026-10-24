@@ -34,7 +34,7 @@ export function ModeSwitcher({
 }: ModeSwitcherProps) {
   return (
     <div
-      className={`hidden md:inline-flex rounded-xl border border-border bg-muted/70 p-1 shadow-xs ${className}`}
+      className={`hidden md:inline-flex items-center rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-1.5 shadow-[var(--ui-shadow-sm)] ${className}`}
       role="tablist"
       aria-label="Раздел"
     >
@@ -48,14 +48,14 @@ export function ModeSwitcher({
             aria-selected={active}
             title={item.hint}
             onClick={() => onChange(item.id)}
-            className={`rounded-lg px-3.5 py-2 text-sm transition duration-200 active:scale-[0.98] sm:px-4 ${
+            className={`rounded-xl px-4 py-2 text-sm transition-all duration-200 active:scale-[0.98] cursor-pointer ${
               active
-                ? "heimdall-action font-medium shadow-sm"
-                : "text-fg-muted hover:text-foreground"
+                ? "bg-[var(--ui-color-surface)] text-[var(--ui-color-brand-strong)] font-semibold shadow-xs"
+                : "text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)]"
             }`}
           >
-            <span className="font-brand block leading-none tracking-tight font-bold">{item.label}</span>
-            <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.12em] opacity-70">
+            <span className="block leading-none tracking-tight font-bold">{item.label}</span>
+            <span className="mt-1 block text-[0.62rem] uppercase tracking-[0.12em] opacity-80">
               {item.hint}
             </span>
           </button>

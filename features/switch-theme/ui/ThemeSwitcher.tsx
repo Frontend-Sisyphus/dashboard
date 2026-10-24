@@ -36,13 +36,13 @@ export function ThemeSwitcher({ className = "" }: { className?: string } = {}) {
 
   return (
     <div
-      className={`relative inline-flex items-stretch rounded-xl border border-border bg-muted/70 p-1 shadow-xs select-none ${className}`}
+      className={`relative inline-flex items-stretch rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-1 shadow-[var(--ui-shadow-sm)] select-none ${className}`}
       role="group"
       aria-label="Переключение темы оформления"
     >
-      {/* Sliding Active Pill Indicator with spring-like physics transition */}
+      {/* Sliding Active Pill Indicator */}
       <span
-        className={`absolute inset-y-1 w-[calc(50%-4px)] rounded-lg bg-primary shadow-sm pointer-events-none transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+        className={`absolute inset-y-1 w-[calc(50%-4px)] rounded-xl bg-[var(--ui-color-surface)] shadow-xs pointer-events-none transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
           mounted ? "" : "opacity-0"
         }`}
         style={{
@@ -52,20 +52,20 @@ export function ThemeSwitcher({ className = "" }: { className?: string } = {}) {
         aria-hidden="true"
       />
 
-      {/* Light Theme Button (Sun Icon with smooth rotation & scale) */}
+      {/* Light Theme Button */}
       <button
         type="button"
         onClick={() => handleSelect("light")}
         title="Светлая тема"
         aria-label="Включить светлую тему"
         aria-pressed={theme === "light"}
-        className="group relative z-10 flex h-full w-9 sm:w-10 items-center justify-center rounded-lg transition-transform duration-150 cursor-pointer active:scale-90"
+        className="group relative z-10 flex h-full w-9 sm:w-10 items-center justify-center rounded-xl transition-transform duration-150 cursor-pointer active:scale-90"
       >
         <svg
           className={`h-4.5 w-4.5 sm:h-5 sm:w-5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
             theme === "light"
-              ? "text-[#042428] rotate-0 scale-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
-              : "text-fg-muted -rotate-45 scale-75 opacity-70 group-hover:opacity-100 group-hover:text-foreground group-hover:scale-85"
+              ? "text-[var(--ui-color-brand-strong)] rotate-0 scale-100 font-bold"
+              : "text-[var(--ui-color-text-muted)] -rotate-45 scale-75 opacity-70 group-hover:opacity-100 group-hover:text-[var(--ui-color-text)] group-hover:scale-85"
           }`}
           viewBox="0 0 24 24"
           fill="none"
@@ -87,20 +87,20 @@ export function ThemeSwitcher({ className = "" }: { className?: string } = {}) {
         </svg>
       </button>
 
-      {/* Dark Theme Button (Moon Icon with smooth rotation & scale) */}
+      {/* Dark Theme Button */}
       <button
         type="button"
         onClick={() => handleSelect("dark")}
         title="Тёмная тема"
         aria-label="Включить тёмную тему"
         aria-pressed={theme === "dark"}
-        className="group relative z-10 flex h-full w-9 sm:w-10 items-center justify-center rounded-lg transition-transform duration-150 cursor-pointer active:scale-90"
+        className="group relative z-10 flex h-full w-9 sm:w-10 items-center justify-center rounded-xl transition-transform duration-150 cursor-pointer active:scale-90"
       >
         <svg
           className={`h-4.5 w-4.5 sm:h-5 sm:w-5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
             theme === "dark"
-              ? "text-[#042428] rotate-0 scale-100 drop-shadow-[0_1px_2px_rgba(0,0,0,0.18)]"
-              : "text-fg-muted rotate-45 scale-75 opacity-70 group-hover:opacity-100 group-hover:text-foreground group-hover:scale-85"
+              ? "text-[var(--ui-color-brand-strong)] rotate-0 scale-100 font-bold"
+              : "text-[var(--ui-color-text-muted)] rotate-45 scale-75 opacity-70 group-hover:opacity-100 group-hover:text-[var(--ui-color-text)] group-hover:scale-85"
           }`}
           viewBox="0 0 24 24"
           fill="none"

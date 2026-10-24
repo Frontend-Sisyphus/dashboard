@@ -131,14 +131,14 @@ export function SprintVelocityChart({ embedded = false }: { embedded?: boolean }
           <defs>
             {/* Primary Tasks Gradient */}
             <linearGradient id={`tasks-grad-${uid}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#00cbd9" stopOpacity="0.32" />
-              <stop offset="95%" stopColor="#00cbd9" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#33b3b2" stopOpacity="0.32" />
+              <stop offset="95%" stopColor="#33b3b2" stopOpacity="0.0" />
             </linearGradient>
 
             {/* Commits Gradient */}
             <linearGradient id={`commits-grad-${uid}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
-              <stop offset="95%" stopColor="#10b981" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#16a34a" stopOpacity="0.25" />
+              <stop offset="95%" stopColor="#16a34a" stopOpacity="0.0" />
             </linearGradient>
 
             {/* Glow Filter */}
@@ -178,14 +178,14 @@ export function SprintVelocityChart({ embedded = false }: { embedded?: boolean }
             );
           })}
 
-          {/* Commits Area & Line (Green / Emerald) */}
+          {/* Commits Area & Line (Green / Status Success) */}
           {(activeMetric === "both" || activeMetric === "commits") && (
             <>
               <path d={commitsAreaD} fill={`url(#commits-grad-${uid})`} />
               <path
                 d={commitsData.pathD}
                 fill="none"
-                stroke="#10b981"
+                stroke="#16a34a"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 filter={`url(#chart-glow-${uid})`}
@@ -193,14 +193,14 @@ export function SprintVelocityChart({ embedded = false }: { embedded?: boolean }
             </>
           )}
 
-          {/* Tasks Area & Line (Cyan / Primary) */}
+          {/* Tasks Area & Line (Teal / Primary) */}
           {(activeMetric === "both" || activeMetric === "tasks") && (
             <>
               <path d={tasksAreaD} fill={`url(#tasks-grad-${uid})`} />
               <path
                 d={tasksData.pathD}
                 fill="none"
-                stroke="#00cbd9"
+                stroke="#33b3b2"
                 strokeWidth="3"
                 strokeLinecap="round"
                 filter={`url(#chart-glow-${uid})`}

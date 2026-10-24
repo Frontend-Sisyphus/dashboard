@@ -128,94 +128,94 @@ export function ProjectsStatsScreen() {
   return (
     <div className="flex flex-1 flex-col gap-5 sm:gap-6">
       {/* 1. Executive Summary & Observability Header */}
-      <div className="rounded-xl border border-border bg-elevated/80 p-4 shadow-sm backdrop-blur-md transition-colors sm:p-5">
+      <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 sm:p-5 shadow-[var(--ui-shadow-sm)] backdrop-blur-md transition-colors">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-2.5">
-              <h2 className="text-base font-bold tracking-tight text-foreground sm:text-lg">
+              <h2 className="text-base font-bold tracking-tight text-[var(--ui-color-text)] sm:text-lg">
                 Статистика и аналитика экосистемы проектов ИТС
               </h2>
-              <span className="rounded-md border border-primary/30 bg-primary/15 px-2.5 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wider text-primary">
+              <span className="au-badge au-badge--brand font-mono font-bold">
                 {mockEcosystemStatsKpis.totalProjects} активных сервисов
               </span>
             </div>
-            <p className="mt-1 text-xs text-fg-muted">
+            <p className="mt-1 text-xs text-[var(--ui-color-text-muted)]">
               Оперативная сводка инженерных метрик, динамика спринтов и состояние жизненного цикла проектов
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 self-start text-xs sm:self-auto font-mono">
-            <span className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/60 px-3 py-1.5 text-foreground">
-              <span className="h-2 w-2 rounded-full bg-ok animate-pulse" />
+          <div className="flex flex-wrap items-center gap-2.5 self-start text-xs sm:self-auto font-mono">
+            <span className="flex items-center gap-1.5 rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] px-3 py-1.5 text-[var(--ui-color-text)]">
+              <span className="h-2 w-2 rounded-full bg-[#16a34a] animate-pulse" />
               <span>{mockEcosystemStatsKpis.onlineNow} разработчиков онлайн</span>
             </span>
-            <span className="rounded-lg border border-border bg-muted/60 px-3 py-1.5 text-fg-muted">
-              Релизов в 2026: <strong className="text-foreground">{mockEcosystemStatsKpis.releasesThisYear}</strong>
+            <span className="rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] px-3 py-1.5 text-[var(--ui-color-text-muted)]">
+              Релизов в 2026: <strong className="text-[var(--ui-color-text)]">{mockEcosystemStatsKpis.releasesThisYear}</strong>
             </span>
           </div>
         </div>
 
         {/* 5 KPI Metric Cards */}
-        <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border/60 pt-4 sm:grid-cols-3 md:grid-cols-5">
-          <div className="rounded-lg border border-border bg-muted/40 p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
+        <div className="mt-4 grid grid-cols-2 gap-3 border-t border-[var(--ui-color-border)] pt-4 sm:grid-cols-3 md:grid-cols-5">
+          <div className="rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
               Запущено проектов
             </p>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-mono text-xl font-bold tracking-tight text-ok sm:text-2xl">
+              <span className="font-mono text-xl font-bold tracking-tight text-[var(--ui-color-status-success-text)] sm:text-2xl">
                 {mockEcosystemStatsKpis.productionCount}
               </span>
-              <span className="text-[11px] text-fg-muted">боевых сервисов</span>
+              <span className="text-[11px] text-[var(--ui-color-text-muted)]">боевых сервисов</span>
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-muted/40 p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
+          <div className="rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
               Бета & Разработка
             </p>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-mono text-xl font-bold tracking-tight text-primary sm:text-2xl">
+              <span className="font-mono text-xl font-bold tracking-tight text-[var(--ui-color-brand-strong)] sm:text-2xl">
                 {mockEcosystemStatsKpis.betaCount + mockEcosystemStatsKpis.developmentCount}
               </span>
-              <span className="text-[11px] text-fg-muted">в работе</span>
+              <span className="text-[11px] text-[var(--ui-color-text-muted)]">в работе</span>
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-muted/40 p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
+          <div className="rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
               Контрибьюторы
             </p>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-mono text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              <span className="font-mono text-xl font-bold tracking-tight text-[var(--ui-color-text)] sm:text-2xl">
                 {mockEcosystemStatsKpis.totalContributors}
               </span>
-              <span className="text-[11px] text-ok">участников</span>
+              <span className="text-[11px] text-[var(--ui-color-status-success-text)] font-semibold">участников</span>
             </div>
           </div>
 
-          <div className="rounded-lg border border-border bg-muted/40 p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
+          <div className="rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
               Задач закрыто за месяц
             </p>
             <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="font-mono text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              <span className="font-mono text-xl font-bold tracking-tight text-[var(--ui-color-text)] sm:text-2xl">
                 {mockEcosystemStatsKpis.tasksCompletedMonth}
               </span>
-              <span className="inline-flex items-center gap-0.5 text-[11px] text-ok font-mono font-semibold">
-                <TrendUpIcon className="w-3 h-3 text-ok" /> +24%
+              <span className="inline-flex items-center gap-0.5 text-[11px] text-[var(--ui-color-status-success-text)] font-mono font-semibold">
+                <TrendUpIcon className="w-3 h-3 text-[var(--ui-color-status-success-text)]" /> +24%
               </span>
             </div>
           </div>
 
-          <div className="col-span-2 rounded-lg border border-border bg-muted/40 p-3 sm:col-span-1">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
-              Готовность согласно планам
+          <div className="col-span-2 rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-3 sm:col-span-1">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
+              Готовность по планам
             </p>
             <div className="mt-1 flex items-baseline gap-2">
-              <span className="font-mono text-xl font-bold tracking-tight text-primary sm:text-2xl">
+              <span className="font-mono text-xl font-bold tracking-tight text-[var(--ui-color-brand-strong)] sm:text-2xl">
                 {mockEcosystemStatsKpis.averageRoadmapProgress}%
               </span>
-              <span className="text-[11px] text-fg-muted">средняя</span>
+              <span className="text-[11px] text-[var(--ui-color-text-muted)]">средняя</span>
             </div>
           </div>
         </div>
@@ -420,7 +420,7 @@ export function ProjectsStatsScreen() {
             </div>
 
             {/* Sort Control */}
-            <div className="inline-flex rounded-lg border border-border bg-muted/50 p-0.5 text-xs">
+            <div className="inline-flex rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-0.5 text-xs">
               {[
                 { id: "progress", label: "Прогресс" },
                 { id: "tasks", label: "Задачи" },
@@ -431,9 +431,9 @@ export function ProjectsStatsScreen() {
                   key={s.id}
                   type="button"
                   onClick={() => setSortBy(s.id as any)}
-                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer active:scale-95 ${sortBy === s.id
-                    ? "bg-primary text-[#042428] font-bold shadow-xs"
-                    : "text-fg-muted hover:text-foreground"
+                  className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition cursor-pointer active:scale-95 ${sortBy === s.id
+                    ? "bg-[var(--ui-color-surface)] text-[var(--ui-color-brand-strong)] shadow-xs"
+                    : "text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)]"
                     }`}
                 >
                   {s.label}
@@ -444,8 +444,8 @@ export function ProjectsStatsScreen() {
         </div>
 
         {/* Phase Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-fg-muted mr-1">
+        <div className="flex flex-wrap items-center gap-2 border-t border-[var(--ui-color-border)] pt-3">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ui-color-text-muted)] mr-1">
             Фаза:
           </span>
           {[
@@ -459,9 +459,9 @@ export function ProjectsStatsScreen() {
               key={item.id}
               type="button"
               onClick={() => setPhaseFilter(item.id as any)}
-              className={`rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer active:scale-95 ${phaseFilter === item.id
-                ? "border border-primary bg-primary/20 text-foreground font-semibold shadow-xs"
-                : "border border-border bg-muted/40 text-fg-muted hover:text-foreground hover:border-border-strong"
+              className={`rounded-xl px-3 py-1 text-xs font-semibold transition cursor-pointer active:scale-95 ${phaseFilter === item.id
+                ? "border border-[var(--ui-color-brand-strong)] bg-[var(--ui-color-brand-soft)] text-[var(--ui-color-brand-strong)] shadow-xs"
+                : "border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)]"
                 }`}
             >
               {item.label}
@@ -469,8 +469,8 @@ export function ProjectsStatsScreen() {
           ))}
 
           {/* Categories */}
-          <span className="hidden sm:inline text-border">|</span>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-fg-muted mr-1">
+          <span className="hidden sm:inline text-[var(--ui-color-border)]">|</span>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--ui-color-text-muted)] mr-1">
             Категория:
           </span>
           {categories.map((cat) => (
@@ -478,17 +478,17 @@ export function ProjectsStatsScreen() {
               key={cat}
               type="button"
               onClick={() => setCategoryFilter(cat)}
-              className={`rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer active:scale-95 ${categoryFilter === cat
-                ? "border border-primary bg-primary/20 text-foreground font-semibold shadow-xs"
-                : "border border-border bg-muted/40 text-fg-muted hover:text-foreground hover:border-border-strong"
+              className={`rounded-xl px-3 py-1 text-xs font-semibold transition cursor-pointer active:scale-95 ${categoryFilter === cat
+                ? "border border-[var(--ui-color-brand-strong)] bg-[var(--ui-color-brand-soft)] text-[var(--ui-color-brand-strong)] shadow-xs"
+                : "border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)]"
                 }`}
             >
               {cat === "all" ? "Все категории" : cat}
             </button>
           ))}
 
-          <span className="ml-auto font-mono text-xs text-fg-muted">
-            Найдено: <strong className="text-foreground">{filteredProjects.length}</strong>
+          <span className="ml-auto font-mono text-xs text-[var(--ui-color-text-muted)]">
+            Найдено: <strong className="text-[var(--ui-color-text)]">{filteredProjects.length}</strong>
           </span>
         </div>
       </div>
@@ -513,21 +513,21 @@ export function ProjectsStatsScreen() {
             return (
               <div
                 key={project.id}
-                className="flex flex-col justify-between rounded-xl border border-border bg-elevated/80 p-4 shadow-xs backdrop-blur-md transition-all hover:border-primary/50 hover:shadow-md"
+                className="flex flex-col justify-between rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 shadow-[var(--ui-shadow-sm)] backdrop-blur-md transition-all hover:border-[var(--ui-color-brand-strong)] hover:bg-[var(--ui-color-surface-soft)] hover:shadow-[var(--ui-shadow-md)]"
               >
                 {/* Header */}
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="rounded bg-muted px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-fg-muted">
+                        <span className="au-badge au-badge--neutral text-[10px]">
                           {project.category}
                         </span>
-                        <span className="font-mono text-[10px] text-fg-muted">
+                        <span className="font-mono text-[10px] text-[var(--ui-color-text-muted)]">
                           {project.version}
                         </span>
                       </div>
-                      <h3 className="font-brand mt-1 text-base font-bold text-foreground">
+                      <h3 className="font-bold mt-1 text-base text-[var(--ui-color-text)]">
                         {project.name}
                       </h3>
                     </div>
@@ -539,25 +539,25 @@ export function ProjectsStatsScreen() {
                     </span>
                   </div>
 
-                  <p className="mt-2 line-clamp-2 text-xs text-fg-muted leading-relaxed">
+                  <p className="mt-2 line-clamp-2 text-xs text-[var(--ui-color-text-muted)] leading-relaxed">
                     {project.summary}
                   </p>
 
                   {/* Roadmap Progress Bar */}
-                  <div className="mt-4 rounded-lg border border-border/60 bg-muted/30 p-2.5">
+                  <div className="mt-4 rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-2.5">
                     <div className="flex items-center justify-between text-xs font-semibold">
-                      <span className="text-foreground">Прогресс дорожной карты</span>
-                      <span className="font-mono text-primary font-bold">
+                      <span className="text-[var(--ui-color-text)]">Прогресс дорожной карты</span>
+                      <span className="font-mono text-[var(--ui-color-brand-strong)] font-bold">
                         {project.roadmapProgress}%
                       </span>
                     </div>
-                    <div className="mt-1.5 h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="mt-1.5 h-2 w-full rounded-full bg-[var(--ui-color-border)] overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-primary transition-all duration-500"
+                        className="h-full rounded-full bg-[var(--ui-color-brand-strong)] transition-all duration-500"
                         style={{ width: `${project.roadmapProgress}%` }}
                       />
                     </div>
-                    <div className="mt-2 flex items-center gap-1.5 truncate text-[11px] text-fg-muted">
+                    <div className="mt-2 flex items-center gap-1.5 truncate text-[11px] text-[var(--ui-color-text-muted)]">
                       <TargetIcon className="w-3 h-3 text-primary shrink-0" />
                       <span className="truncate">
                         <strong className="text-foreground/90">Цель:</strong> {project.currentMilestone}

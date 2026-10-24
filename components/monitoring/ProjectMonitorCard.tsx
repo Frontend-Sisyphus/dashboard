@@ -66,23 +66,23 @@ export function ProjectMonitorCard({
           onSelect(project);
         }
       }}
-      className="group relative flex cursor-pointer flex-col justify-between rounded-xl border border-border bg-elevated/70 p-4 shadow-xs transition-all duration-200 hover:border-primary hover:bg-elevated hover:shadow-md sm:p-5"
+      className="group relative flex cursor-pointer flex-col justify-between rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 shadow-[var(--ui-shadow-sm)] transition-all duration-200 hover:border-[var(--ui-color-brand-strong)] hover:bg-[var(--ui-color-surface-soft)] hover:shadow-[var(--ui-shadow-md)] sm:p-5 active:scale-[0.99]"
     >
       {/* Top Header: Name + Status Badge + Priority Tag */}
       <div>
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-base font-bold text-foreground transition group-hover:text-primary sm:text-lg">
+            <h3 className="truncate text-base font-bold text-[var(--ui-color-text)] transition group-hover:text-[var(--ui-color-text-accent)] sm:text-lg">
               {project.name}
             </h3>
-            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-fg-muted">
+            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--ui-color-text-muted)]">
               {project.description}
             </p>
           </div>
 
           <div className="flex shrink-0 flex-col items-end gap-1.5">
             <span
-              className={`flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${statusBadge.bg} ${statusBadge.text} ${statusBadge.border}`}
+              className={`flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${statusBadge.bg} ${statusBadge.text} ${statusBadge.border}`}
             >
               <span
                 className={`h-1.5 w-1.5 rounded-full ${statusBadge.dot} ${project.status === "operational" ? "animate-pulse" : ""
@@ -105,16 +105,16 @@ export function ProjectMonitorCard({
         </div>
 
         {/* Lead & Team line */}
-        <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2.5 text-xs text-fg-muted">
+        <div className="mt-3 flex items-center justify-between border-t border-[var(--ui-color-border)] pt-2.5 text-xs text-[var(--ui-color-text-muted)]">
           <div className="flex items-center gap-1.5 truncate">
             <span className="text-[10px] font-semibold uppercase tracking-wider opacity-80">
               Руководитель:
             </span>
-            <span className="truncate font-semibold text-foreground">
+            <span className="truncate font-semibold text-[var(--ui-color-text)]">
               {project.lead.name}
             </span>
           </div>
-          <span className="shrink-0 text-[10px] text-fg-muted font-medium">
+          <span className="shrink-0 text-[10px] text-[var(--ui-color-text-muted)] font-medium">
             +{project.team.length} в команде
           </span>
         </div>
