@@ -119,14 +119,14 @@ export function HeimdallScreen() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="flex md:hidden self-stretch px-3 items-center justify-center rounded-xl border border-border bg-muted/80 text-foreground shadow-xs active:scale-95 transition cursor-pointer hover:border-primary/50 hover:bg-muted"
+              className="flex md:hidden self-stretch px-3.5 items-center justify-center rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] text-[var(--ui-color-text)] shadow-[var(--ui-shadow-sm)] active:scale-95 transition cursor-pointer hover:border-[var(--ui-color-brand-strong)] hover:bg-[var(--ui-color-surface-soft)]"
               aria-label="Открыть меню навигации"
               title="Меню"
             >
               <div className="flex flex-col gap-1.2 w-4.5">
-                <span className="block h-0.5 w-full bg-foreground rounded-full" />
-                <span className="block h-0.5 w-full bg-primary rounded-full" />
-                <span className="block h-0.5 w-full bg-foreground rounded-full" />
+                <span className="block h-0.5 w-full bg-[var(--ui-color-text)] rounded-full" />
+                <span className="block h-0.5 w-full bg-[var(--ui-color-brand-strong)] rounded-full" />
+                <span className="block h-0.5 w-full bg-[var(--ui-color-text)] rounded-full" />
               </div>
             </button>
           </div>

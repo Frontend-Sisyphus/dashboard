@@ -13,7 +13,7 @@ import {
   type CampusServiceItem,
 } from "@/entities/student";
 
-// Minimal SVG Icons (no emojis)
+/* Minimal SVG Icons from Storybook Accessible University Kit */
 function CalendarIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -43,41 +43,36 @@ function MapPinIcon({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
-function BookIcon({ className = "w-4 h-4" }: { className?: string }) {
+function UserIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
 
-function CheckCircleIcon({ className = "w-4 h-4" }: { className?: string }) {
+function MailIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
+      <rect width="20" height="16" x="2" y="4" rx="2" />
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
     </svg>
   );
 }
 
-function AlertCircleIcon({ className = "w-4 h-4" }: { className?: string }) {
+function ChevronLeftIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <line x1="12" y1="8" x2="12" y2="12" />
-      <line x1="12" y1="16" x2="12.01" y2="16" />
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15 18 9 12 15 6" />
     </svg>
   );
 }
 
-function UsersIcon({ className = "w-4 h-4" }: { className?: string }) {
+function ChevronRightIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
     </svg>
   );
 }
@@ -101,12 +96,41 @@ function CloseIcon({ className = "w-4 h-4" }: { className?: string }) {
   );
 }
 
+function CheckCircleIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+}
+
+/* Helper to generate 7 days for the schedule switcher */
+const weekDaysMeta = [
+  { shortName: "Пн", fullName: "Понедельник", dayNum: 20 },
+  { shortName: "Вт", fullName: "Вторник", dayNum: 21 },
+  { shortName: "Ср", fullName: "Среда", dayNum: 22 },
+  { shortName: "Чт", fullName: "Четверг", dayNum: 23 },
+  { shortName: "Пт", fullName: "Пятница", dayNum: 24 },
+  { shortName: "Сб", fullName: "Суббота", dayNum: 25 },
+  { shortName: "Вс", fullName: "Воскресенье", dayNum: 26 },
+];
+
 export function BifrostStudentScreen() {
   const [selectedDayIdx, setSelectedDayIdx] = useState(0); // Monday default
   const [selectedGroup, setSelectedGroup] = useState("ПИ23-1");
+  const [weekOffset, setWeekOffset] = useState(0); // 0 = current week
+  const [activeTab, setActiveTab] = useState<"schedule" | "deadlines" | "services">("schedule");
+  
+  // Modals state
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [certType, setCertType] = useState("Справка об обучении с гербовой печатью");
+  
+  // Lesson Details Modal State (from Storybook Schedule/Lesson Details Modal)
+  const [selectedLesson, setSelectedLesson] = useState<LessonItem | null>(null);
+  const [selectedSubgroup, setSelectedSubgroup] = useState<"all" | "sub1" | "sub2">("all");
+  const [copyFeedback, setCopyFeedback] = useState<string | null>(null);
 
   const groups = ["ПИ23-1", "ПИ23-2", "ИБ23-1", "ИТ22-1"];
   const activeDay = mockWeekSchedule[selectedDayIdx] ?? mockWeekSchedule[0]!;
@@ -120,313 +144,378 @@ export function BifrostStudentScreen() {
     }, 2200);
   };
 
+  const copyTeacherEmail = (email: string) => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(email);
+      setCopyFeedback("Email скопирован в буфер");
+      setTimeout(() => setCopyFeedback(null), 2000);
+    }
+  };
+
   return (
-    <div className="flex flex-1 flex-col gap-4 sm:gap-5 lg:gap-6">
-      {/* 1. Student Campus Header & Quick Status Bar */}
-      <div className="rounded-xl border border-border bg-elevated/80 p-3.5 shadow-sm backdrop-blur-md transition-colors sm:p-5">
-        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex flex-1 flex-col gap-4 sm:gap-5 lg:gap-6 au-container">
+      {/* 1. Header Bar in Accessible University Style */}
+      <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 sm:p-5 shadow-[var(--ui-shadow-sm)] backdrop-blur-md transition-colors">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-sm font-bold tracking-tight text-foreground sm:text-base lg:text-lg">
-                Кампусный портал и сервисы Биврёст
+              <h2 className="text-base sm:text-lg font-bold tracking-tight text-[var(--ui-color-text)]">
+                Кампусный портал и расписание Биврёст
               </h2>
-              <span className="rounded-md border border-primary/30 bg-primary/15 px-2 py-0.5 font-mono text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-primary">
-                Студенческий хаб ИТС
+              <span className="au-badge au-badge--brand">
+                ИТС Университет
+              </span>
+              <span className="au-badge au-badge--neutral">
+                8-я неделя (Чётная)
               </span>
             </div>
-            <p className="mt-1 text-xs text-fg-muted leading-relaxed max-w-3xl">
-              Расписание занятий, дедлайны по предметам, занятость коворкингов и сервисы Финансового университета
+            <p className="mt-1 text-xs sm:text-sm text-[var(--ui-color-text-muted)] leading-relaxed max-w-3xl">
+              Студенческий хаб: интерактивное расписание пар, дедлайны по предметам, занятость коворкингов и цифровые сервисы
             </p>
           </div>
 
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center lg:items-center text-xs font-mono">
-            {/* Week & Semester Badges */}
-            <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/60 px-2.5 py-1.5 text-foreground text-[11px] sm:text-xs">
-                <span className="h-2 w-2 rounded-full bg-ok animate-pulse shrink-0" />
-                <span className="truncate">8-я неделя (Чётная)</span>
-              </span>
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Quick Action Button in AU Style */}
+            <button
+              type="button"
+              onClick={() => setOrderModalOpen(true)}
+              className="inline-flex items-center gap-2 rounded-xl bg-[var(--ui-color-brand)] px-4 py-2 text-xs font-semibold text-[var(--ui-color-on-brand)] hover:bg-[var(--ui-color-brand-strong)] active:scale-[0.98] transition cursor-pointer shadow-xs"
+            >
+              <span>Заказать справку</span>
+            </button>
 
-              {/* Quick Service Action (Mobile & Tablet) */}
-              <button
-                type="button"
-                onClick={() => setOrderModalOpen(true)}
-                className="flex-1 sm:flex-none text-center rounded-lg border border-primary/40 bg-primary/20 px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-foreground hover:bg-primary hover:text-[#042428] transition cursor-pointer active:scale-95 whitespace-nowrap"
-              >
-                Заказать справку
-              </button>
-            </div>
-
-            {/* Group Switcher - Scrollable horizontally on mobile */}
-            <div className="flex items-center overflow-x-auto py-0.5 no-scrollbar">
-              <div className="inline-flex rounded-lg border border-border bg-muted/60 p-0.5 text-xs shrink-0">
-                {groups.map((grp) => (
-                  <button
-                    key={grp}
-                    type="button"
-                    onClick={() => setSelectedGroup(grp)}
-                    className={`rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer active:scale-95 ${
-                      selectedGroup === grp
-                        ? "bg-primary text-[#042428] font-bold shadow-xs"
-                        : "text-fg-muted hover:text-foreground"
-                    }`}
-                  >
-                    {grp}
-                  </button>
-                ))}
-              </div>
+            {/* Group Switcher Tabs */}
+            <div className="au-tabs">
+              {groups.map((grp) => (
+                <button
+                  key={grp}
+                  type="button"
+                  onClick={() => setSelectedGroup(grp)}
+                  className={`au-tabs__item ${selectedGroup === grp ? "active" : ""}`}
+                >
+                  {grp}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Current / Ongoing Pair Alert Strip */}
-        <div className="mt-3.5 flex flex-col gap-2.5 border-t border-border/60 pt-3 text-xs md:flex-row md:items-center md:justify-between">
+        {/* Current Ongoing Pair Banner */}
+        <div className="mt-4 flex flex-col gap-2.5 border-t border-[var(--ui-color-border)] pt-3 text-xs md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap items-center gap-2 min-w-0">
-            <span className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-ok/20 text-ok shrink-0">
-              <span className="h-2 w-2 rounded-full bg-ok animate-ping" />
+            <span className="au-badge au-badge--success font-semibold">
+              <span className="h-2 w-2 rounded-full bg-[#16a34a] animate-ping" />
+              Сейчас идет занятие
             </span>
-            <span className="text-fg-muted text-[11px] sm:text-xs shrink-0">Сейчас идет:</span>
-            <strong className="text-foreground text-[11px] sm:text-xs font-semibold truncate max-w-[280px] sm:max-w-md">
+            <strong className="text-[var(--ui-color-text)] text-xs sm:text-sm font-semibold truncate max-w-[280px] sm:max-w-md">
               Проектирование микросервисов на Go & .NET
             </strong>
-            <span className="rounded bg-muted px-2 py-0.5 font-mono text-[10px] sm:text-[11px] text-fg-muted border border-border/40 whitespace-nowrap">
+            <span className="text-[var(--ui-color-text-muted)]">·</span>
+            <span className="text-[var(--ui-color-text-accent)] font-medium">
               Ауд. 315 · Ленинградский пр-т, 49
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 font-mono text-[11px] text-fg-muted shrink-0">
-            <span>До конца: <strong className="text-primary font-bold">42 мин</strong></span>
+          <div className="flex items-center gap-2.5 font-mono text-[11px] text-[var(--ui-color-text-muted)] shrink-0">
+            <span>До конца: <strong className="text-[var(--ui-color-brand-strong)] font-bold">42 мин</strong></span>
             <span>·</span>
-            <span>След: <strong className="text-foreground">БД (12:15)</strong></span>
+            <span>След: <strong className="text-[var(--ui-color-text)]">БД (12:15)</strong></span>
           </div>
         </div>
       </div>
 
-      {/* 2. Main Row: Schedule Console (8 cols) + Deadlines (4 cols) */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-stretch">
-        {/* Left Column (8 cols): Interactive Schedule Matrix */}
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-elevated/80 p-4 shadow-xs backdrop-blur-md transition-colors sm:p-5 lg:col-span-8">
-          <div>
-            {/* Header with Day Switcher */}
-            <div className="flex flex-col gap-3 border-b border-border/60 pb-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <CalendarIcon className="w-4 h-4 text-primary" />
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
-                    Расписание занятий группы {selectedGroup}
-                  </h3>
-                </div>
-                <p className="mt-0.5 text-xs text-foreground/80">
-                  {activeDay.dayName}, {activeDay.dateStr}
-                </p>
+      {/* 2. Main Grid: Schedule Console + Side Panels */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 items-start">
+        {/* Left Column (8 cols): Interactive Schedule Console with Storybook Week Switcher */}
+        <div className="lg:col-span-8 flex flex-col gap-4">
+          {/* Schedule Week Switcher from Storybook (Schedule/WeekSelector) */}
+          <div className="schedule-main-container">
+            <div className="schedule-week-switcher">
+              <div className="flex items-center gap-2">
+                <CalendarIcon className="w-4 h-4 text-[var(--ui-color-brand-strong)]" />
+                <span className="font-semibold text-sm text-[var(--ui-color-text)]">
+                  Октябрь 2026
+                </span>
+                <span className="text-xs text-[var(--ui-color-text-muted)]">
+                  · Группа {selectedGroup}
+                </span>
               </div>
 
-              {/* Day Pills: horizontal scrollable on mobile, flexible on desktop */}
-              <div className="flex w-full sm:w-auto items-center overflow-x-auto no-scrollbar py-0.5">
-                <div className="inline-flex w-full sm:w-auto justify-between rounded-lg border border-border bg-muted/60 p-0.5 text-xs">
-                  {mockWeekSchedule.map((d, idx) => (
-                    <button
-                      key={d.dayName}
-                      type="button"
-                      onClick={() => setSelectedDayIdx(idx)}
-                      className={`flex-1 sm:flex-initial text-center rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer active:scale-95 ${
-                        selectedDayIdx === idx
-                          ? "bg-primary text-[#042428] font-bold shadow-xs"
-                          : "text-fg-muted hover:text-foreground"
-                      }`}
-                    >
-                      <span className="sm:hidden">{d.dayName.slice(0, 2)}</span>
-                      <span className="hidden sm:inline">{d.dayName.slice(0, 3)}</span>
-                    </button>
-                  ))}
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setWeekOffset(0);
+                    setSelectedDayIdx(0);
+                  }}
+                  className="rounded-lg px-2.5 py-1 text-xs font-medium text-[var(--ui-color-text-accent)] hover:bg-[var(--ui-color-surface-soft)] transition cursor-pointer"
+                >
+                  Сегодня
+                </button>
+                <div className="flex items-center gap-1 border-l border-[var(--ui-color-border)] pl-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setWeekOffset((prev) => prev - 1)}
+                    className="flex h-7 w-7 items-center justify-center rounded-lg text-[var(--ui-color-text-muted)] hover:bg-[var(--ui-color-surface-soft)] hover:text-[var(--ui-color-text)] transition cursor-pointer"
+                    aria-label="Предыдущая неделя"
+                  >
+                    <ChevronLeftIcon className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setWeekOffset((prev) => prev + 1)}
+                    className="flex h-7 w-7 items-center justify-center rounded-lg text-[var(--ui-color-text-muted)] hover:bg-[var(--ui-color-surface-soft)] hover:text-[var(--ui-color-text)] transition cursor-pointer"
+                    aria-label="Следующая неделя"
+                  >
+                    <ChevronRightIcon className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* List of Lessons */}
-            <div className="mt-4 space-y-3">
-              {activeDay.lessons.map((lesson) => {
-                const isCurrent = lesson.status === "current";
-                const isPast = lesson.status === "past";
-
-                const typeBadge =
-                  lesson.type === "lab"
-                    ? "border-primary/40 bg-primary/15 text-primary"
-                    : lesson.type === "lecture"
-                    ? "border-blue/40 bg-blue/15 text-blue"
-                    : lesson.type === "practice"
-                    ? "border-ok/40 bg-ok/15 text-ok"
-                    : "border-warn/40 bg-warn/15 text-warn";
-
+            {/* 7 Days Grid */}
+            <div className="grid grid-cols-7 gap-1">
+              {weekDaysMeta.map((day, idx) => {
+                const isActive = selectedDayIdx === idx;
+                const isToday = idx === 0; // Monday as today in mock
                 return (
-                  <div
-                    key={lesson.id}
-                    className={`flex flex-col justify-between gap-3 rounded-xl border p-3 sm:p-3.5 transition-all sm:flex-row sm:items-center sm:gap-4 ${
-                      isCurrent
-                        ? "border-primary bg-primary/10 shadow-sm"
-                        : isPast
-                        ? "border-border/50 bg-muted/30 opacity-70"
-                        : "border-border bg-muted/40 hover:border-border-strong hover:bg-muted/60"
-                    }`}
+                  <button
+                    key={day.shortName}
+                    type="button"
+                    onClick={() => setSelectedDayIdx(idx)}
+                    className={`schedule-day-chip ${isActive ? "active" : ""}`}
                   >
-                    <div className="flex items-start gap-2.5 sm:gap-3.5 min-w-0">
-                      {/* Time slot */}
-                      <div className="shrink-0 text-center font-mono w-12 sm:w-14">
-                        <span className="block text-xs font-bold text-foreground">
-                          {lesson.timeStart}
-                        </span>
-                        <span className="block text-[10px] text-fg-muted">
-                          {lesson.timeEnd}
-                        </span>
-                        {isCurrent && (
-                          <span className="mt-1 inline-block rounded bg-ok px-1 py-0.2 text-[8px] font-bold uppercase text-[#042428]">
-                            Сейчас
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="border-l border-border/60 pl-2.5 sm:pl-3.5 min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                          <span
-                            className={`rounded border px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${typeBadge}`}
-                          >
-                            {lesson.typeLabel}
-                          </span>
-                          <span className="font-mono text-xs font-semibold text-foreground">
-                            {lesson.room}
-                          </span>
-                          <span className="text-[10px] sm:text-[11px] text-fg-muted truncate">
-                            ({lesson.campus})
-                          </span>
-                        </div>
-
-                        <h4 className="mt-1 text-xs sm:text-sm font-bold text-foreground leading-snug break-words">
-                          {lesson.title}
-                        </h4>
-
-                        <p className="mt-0.5 text-[11px] sm:text-xs text-fg-muted truncate">
-                          Преподаватель: <span className="text-foreground">{lesson.teacher}</span>
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Action button */}
-                    <div className="flex items-center justify-end gap-2 sm:shrink-0 pt-2 border-t border-border/40 sm:border-0 sm:pt-0">
-                      <a
-                        href="https://map.fa.ru"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center gap-1.5 rounded-lg border border-border bg-elevated/70 px-2.5 py-1 text-[11px] font-medium text-foreground hover:border-primary hover:text-primary transition"
-                        title="Показать маршрут в FinMap"
-                      >
-                        <MapPinIcon className="w-3.5 h-3.5 text-primary" />
-                        <span>Маршрут</span>
-                      </a>
-                    </div>
-                  </div>
+                    <strong>{day.shortName}</strong>
+                    <p>{day.dayNum + weekOffset * 7}</p>
+                    {isToday && <span className="today-dot" />}
+                  </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Schedule Footer */}
-          <div className="mt-4 flex flex-col gap-1.5 border-t border-border/60 pt-3 text-xs text-fg-muted sm:flex-row sm:items-center sm:justify-between">
-            <span className="font-mono">
-              Всего занятий в этот день: <strong className="text-foreground">{activeDay.lessons.length}</strong>
-            </span>
-            <span className="font-mono text-[10px] sm:text-[11px]">
-              Синхронизировано с расписанием 1С:Университет
-            </span>
+          {/* List of Lessons for the Selected Day in Storybook LessonCard Style */}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between px-1 mb-2">
+              <h3 className="text-sm font-semibold text-[var(--ui-color-text)]">
+                {activeDay.dayName}, {activeDay.dateStr}
+              </h3>
+              <span className="text-xs text-[var(--ui-color-text-muted)]">
+                {activeDay.lessons.length} {activeDay.lessons.length === 1 ? "пара" : "пары"}
+              </span>
+            </div>
+
+            {activeDay.lessons.length === 0 ? (
+              <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-8 text-center text-[var(--ui-color-text-muted)]">
+                <CalendarIcon className="mx-auto w-8 h-8 text-[var(--ui-color-text-muted)] mb-2 opacity-50" />
+                <p className="font-medium text-sm">В этот день занятий нет</p>
+                <p className="text-xs mt-1">Отличное время для отдыха или подготовки к проектам</p>
+              </div>
+            ) : (
+              activeDay.lessons.map((lesson, idx) => {
+                const isCurrent = lesson.status === "current";
+                const isPast = lesson.status === "past";
+
+                let badgeVariant = "au-badge--neutral";
+                if (lesson.type === "lab") badgeVariant = "au-badge--brand";
+                else if (lesson.type === "lecture") badgeVariant = "au-badge--info";
+                else if (lesson.type === "seminar" || lesson.type === "practice") badgeVariant = "au-badge--success";
+
+                return (
+                  <div
+                    key={lesson.id}
+                    onClick={() => setSelectedLesson(lesson)}
+                    className={`schedule-lesson-card ${isCurrent ? "current" : ""} ${isPast ? "opacity-75" : ""}`}
+                  >
+                    {/* Header: Time, Lesson Number, Badge */}
+                    <div className="schedule-lesson-card__header">
+                      <div className="flex items-center gap-2">
+                        <span className="schedule-chip--number">
+                          #{idx + 1}
+                        </span>
+                        <span className="schedule-lesson-card__time">
+                          {lesson.timeStart} – {lesson.timeEnd}
+                        </span>
+                        {isCurrent && (
+                          <span className="au-badge au-badge--success">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#16a34a] animate-ping" />
+                            Идет сейчас
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className={`au-badge ${badgeVariant}`}>
+                          {lesson.typeLabel}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Lesson Title */}
+                    <h4 className="schedule-lesson-card__title">
+                      {lesson.title}
+                    </h4>
+
+                    {/* Footer Row: Location & Teacher */}
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[var(--ui-color-border)] mt-1">
+                      <div className="schedule-lesson-card__location">
+                        <MapPinIcon className="w-3.5 h-3.5 text-[var(--ui-color-icon-accent)] shrink-0" />
+                        <span className="auditorium" title="Нажмите для открытия деталей">
+                          {lesson.room}
+                        </span>
+                        <span className="text-[var(--ui-color-text-muted)]">
+                          · {lesson.campus}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 text-xs text-[var(--ui-color-text-soft)]">
+                        <UserIcon className="w-3.5 h-3.5 text-[var(--ui-color-text-muted)]" />
+                        <span>{lesson.teacher}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+
+            {/* Sync Status Footer */}
+            <div className="flex items-center justify-between px-2 py-2 text-xs text-[var(--ui-color-text-muted)]">
+              <span>Синхронизировано с расписанием 1С:Университет</span>
+              <span className="font-mono text-[11px]">Обновлено: 10 минут назад</span>
+            </div>
           </div>
         </div>
 
-        {/* Right Column (4 cols): Deadlines & Control Points */}
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-elevated/80 p-4 shadow-xs backdrop-blur-md transition-colors sm:p-5 lg:col-span-4">
-          <div>
-            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+        {/* Right Column (4 cols): Deadlines & Quick Services */}
+        <div className="lg:col-span-4 flex flex-col gap-4">
+          {/* Deadlines Card (Storybook Primitives/Card) */}
+          <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 shadow-[var(--ui-shadow-sm)]">
+            <div className="flex items-center justify-between border-b border-[var(--ui-color-border)] pb-3">
               <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
                   Ближайшие дедлайны
                 </h3>
-                <p className="mt-0.5 text-xs text-foreground/80">
+                <p className="mt-0.5 text-xs text-[var(--ui-color-text)]">
                   Лабораторные и контрольные точки
                 </p>
               </div>
-              <span className="font-mono text-xs font-bold text-warn">
+              <span className="au-badge au-badge--warning">
                 {mockStudentDeadlines.length} задачи
               </span>
             </div>
 
-            {/* Deadline Cards */}
-            <div className="mt-3.5 space-y-3">
+            <div className="mt-3 flex flex-col gap-2.5">
               {mockStudentDeadlines.map((dl) => {
                 const isUrgent = dl.daysLeft <= 2;
-
                 return (
                   <div
                     key={dl.id}
                     className={`rounded-xl border p-3 flex flex-col justify-between transition-all ${
                       isUrgent
-                        ? "border-warn/40 bg-warn/10"
-                        : "border-border/70 bg-muted/30"
+                        ? "border-[var(--ui-color-status-warning-border)] bg-[var(--ui-color-status-warning-bg)]"
+                        : "border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)]"
                     }`}
                   >
                     <div>
                       <div className="flex items-center justify-between gap-1.5">
-                        <span className="rounded bg-muted px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-fg-muted">
+                        <span className="au-badge au-badge--neutral text-[10px]">
                           {dl.subject}
                         </span>
                         <span
-                          className={`font-mono text-[10px] font-bold ${
-                            isUrgent ? "text-warn" : "text-ok"
+                          className={`font-mono text-[11px] font-bold ${
+                            isUrgent ? "text-[var(--ui-color-status-warning-text)]" : "text-[var(--ui-color-status-success-text)]"
                           }`}
                         >
                           Осталось {dl.daysLeft} дн.
                         </span>
                       </div>
 
-                      <h4 className="mt-1.5 text-xs font-bold text-foreground leading-snug">
+                      <h4 className="mt-1.5 text-xs font-semibold text-[var(--ui-color-text)] leading-snug">
                         {dl.title}
                       </h4>
                     </div>
 
-                    <div className="mt-2.5 flex items-center justify-between border-t border-border/40 pt-2 text-[10px] font-mono text-fg-muted">
+                    <div className="mt-2.5 flex items-center justify-between border-t border-[var(--ui-color-border)] pt-2 text-[10px] font-mono text-[var(--ui-color-text-muted)]">
                       <span>Срок: {dl.dueDate}</span>
-                      <span className="font-bold text-primary">+{dl.points} баллов БРС</span>
+                      <span className="font-bold text-[var(--ui-color-brand-strong)]">+{dl.points} баллов БРС</span>
                     </div>
                   </div>
                 );
               })}
             </div>
+
+            <button
+              type="button"
+              onClick={() => setOrderModalOpen(true)}
+              className="mt-3.5 w-full rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] py-2 text-xs font-semibold text-[var(--ui-color-text)] hover:border-[var(--ui-color-brand-strong)] hover:text-[var(--ui-color-brand-strong)] transition cursor-pointer active:scale-[0.98]"
+            >
+              Все задания в ФИН Помощнике →
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setOrderModalOpen(true)}
-            className="mt-4 w-full rounded-lg border border-border bg-muted/60 py-2 text-xs font-semibold text-foreground hover:border-primary hover:text-primary transition cursor-pointer active:scale-98"
-          >
-            Все задания и зачетка в ФИН Помощнике →
-          </button>
+          {/* Academic BRS Progress */}
+          <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 shadow-[var(--ui-shadow-sm)]">
+            <div className="flex items-center justify-between border-b border-[var(--ui-color-border)] pb-2.5">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
+                  Успеваемость БРС
+                </h3>
+                <p className="mt-0.5 text-xs text-[var(--ui-color-text)]">
+                  Текущие баллы по дисциплинам
+                </p>
+              </div>
+              <span className="au-badge au-badge--brand font-mono font-bold">
+                Ср. 85.7
+              </span>
+            </div>
+
+            <div className="mt-3 space-y-2.5">
+              {mockAcademicSubjects.map((sub) => (
+                <div key={sub.name} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs gap-2">
+                    <span className="font-medium text-[var(--ui-color-text)] truncate min-w-0 flex-1">
+                      {sub.name}
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-[var(--ui-color-text)] shrink-0">
+                      {sub.currentPoints}/100
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full rounded-full bg-[var(--ui-color-surface-soft)] overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-[var(--ui-color-brand-strong)]"
+                      style={{ width: `${sub.currentPoints}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-[var(--ui-color-text-muted)] font-mono">
+                    <span>Посещаемость: {sub.attendancePercent}%</span>
+                    <span className="shrink-0">{sub.examType}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 3. Secondary Row: Campus Services (4 cols) + Spaces Occupancy (4 cols) + Grades BRS (4 cols) */}
+      {/* 3. Campus Ecosystem & Coworking Occupancy (Storybook Services & Spaces) */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {/* Campus Services & Apps */}
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-elevated/80 p-4 shadow-xs backdrop-blur-md transition-colors sm:p-5">
-          <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
+        {/* Campus Services */}
+        <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 shadow-[var(--ui-shadow-sm)]">
+          <div className="flex items-center justify-between border-b border-[var(--ui-color-border)] pb-2.5">
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
                 Сервисы экосистемы ИТС
               </h3>
-              <p className="mt-0.5 text-xs text-foreground/80">
-                Быстрый доступ к приложениям
+              <p className="mt-0.5 text-xs text-[var(--ui-color-text)]">
+                Быстрый доступ к кампусным сервисам
               </p>
             </div>
-            <span className="text-[11px] font-mono text-primary font-bold">ИТС Campus</span>
+            <span className="au-badge au-badge--brand">
+              ИТС Campus
+            </span>
           </div>
 
-          <div className="mt-3.5 space-y-2">
+          <div className="mt-3 space-y-2">
             {mockCampusServices.slice(0, 4).map((srv) => (
               <a
                 key={srv.id}
@@ -441,68 +530,68 @@ export function BifrostStudentScreen() {
                       }
                     : undefined
                 }
-                className="group flex items-center justify-between rounded-lg border border-border/60 bg-muted/30 p-2.5 transition hover:border-primary/50 hover:bg-muted/60 cursor-pointer"
+                className="group flex items-center justify-between rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-2.5 transition hover:border-[var(--ui-color-brand-border)] hover:bg-[var(--ui-color-surface-subtle)] cursor-pointer"
               >
                 <div className="min-w-0 pr-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-brand font-bold text-xs text-foreground group-hover:text-primary transition">
+                    <span className="font-semibold text-xs text-[var(--ui-color-text)] group-hover:text-[var(--ui-color-text-accent)] transition">
                       {srv.name}
                     </span>
-                    <span className="rounded bg-muted px-1.5 py-0.2 text-[8px] font-mono font-bold text-fg-muted uppercase">
+                    <span className="au-badge au-badge--neutral text-[9px]">
                       {srv.badge}
                     </span>
                   </div>
-                  <p className="mt-0.5 truncate text-[11px] text-fg-muted">
+                  <p className="mt-0.5 truncate text-[11px] text-[var(--ui-color-text-muted)]">
                     {srv.description}
                   </p>
                 </div>
-                <ExternalLinkIcon className="w-3.5 h-3.5 text-fg-muted group-hover:text-primary shrink-0 transition" />
+                <ExternalLinkIcon className="w-3.5 h-3.5 text-[var(--ui-color-text-muted)] group-hover:text-[var(--ui-color-brand-strong)] shrink-0 transition" />
               </a>
             ))}
           </div>
         </div>
 
-        {/* Campus Spaces & Coworking Occupancy */}
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-elevated/80 p-4 shadow-xs backdrop-blur-md transition-colors sm:p-5">
-          <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
+        {/* Coworking Occupancy */}
+        <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 shadow-[var(--ui-shadow-sm)]">
+          <div className="flex items-center justify-between border-b border-[var(--ui-color-border)] pb-2.5">
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
                 Коворкинги и лаборатории
               </h3>
-              <p className="mt-0.5 text-xs text-foreground/80">
+              <p className="mt-0.5 text-xs text-[var(--ui-color-text)]">
                 Свободные места в реальном времени
               </p>
             </div>
-            <span className="flex items-center gap-1 text-[10px] font-mono text-ok">
-              <span className="h-1.5 w-1.5 rounded-full bg-ok animate-ping" />
+            <span className="au-badge au-badge--success">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#16a34a] animate-ping" />
               Live
             </span>
           </div>
 
-          <div className="mt-3.5 space-y-3">
+          <div className="mt-3 space-y-3">
             {mockCampusSpaces.map((sp) => {
-              const statusTone =
-                sp.loadPercent < 70 ? "bg-ok" : sp.loadPercent < 90 ? "bg-warn" : "bg-critical";
+              const statusBg =
+                sp.loadPercent < 70 ? "bg-[#16a34a]" : sp.loadPercent < 90 ? "bg-[#f59e0b]" : "bg-[#e11d48]";
 
               return (
                 <div key={sp.id} className="space-y-1">
                   <div className="flex items-center justify-between text-xs gap-2">
-                    <span className="font-medium text-foreground truncate min-w-0 flex-1">
+                    <span className="font-medium text-[var(--ui-color-text)] truncate min-w-0 flex-1">
                       {sp.name}
                     </span>
-                    <span className="font-mono text-[11px] text-ok font-bold shrink-0">
+                    <span className="font-mono text-[11px] text-[var(--ui-color-status-success-text)] font-bold shrink-0">
                       {sp.freeSeats} мест свободно
                     </span>
                   </div>
 
-                  <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+                  <div className="h-1.5 w-full rounded-full bg-[var(--ui-color-surface-soft)] overflow-hidden">
                     <div
-                      className={`h-full rounded-full ${statusTone}`}
+                      className={`h-full rounded-full ${statusBg}`}
                       style={{ width: `${sp.loadPercent}%` }}
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px] text-fg-muted font-mono">
+                  <div className="flex items-center justify-between text-[10px] text-[var(--ui-color-text-muted)] font-mono">
                     <span className="truncate max-w-[180px]">{sp.campus}</span>
                     <span className="shrink-0">{sp.workingHours}</span>
                   </div>
@@ -512,121 +601,246 @@ export function BifrostStudentScreen() {
           </div>
         </div>
 
-        {/* Academic BRS Progress */}
-        <div className="flex flex-col justify-between rounded-xl border border-border bg-elevated/80 p-4 shadow-xs backdrop-blur-md transition-colors sm:p-5 md:col-span-2 lg:col-span-1">
-          <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
+        {/* Announcements Stream */}
+        <div className="rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-4 shadow-[var(--ui-shadow-sm)] md:col-span-2 lg:col-span-1">
+          <div className="flex items-center justify-between border-b border-[var(--ui-color-border)] pb-2.5">
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
-                Успеваемость и рейтинг БРС
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--ui-color-text-muted)]">
+                Объявления деканата
               </h3>
-              <p className="mt-0.5 text-xs text-foreground/80">
-                Текущие баллы по дисциплинам
+              <p className="mt-0.5 text-xs text-[var(--ui-color-text)]">
+                События и уведомления
               </p>
             </div>
-            <span className="text-[11px] font-mono text-primary font-bold">Ср. 85.7</span>
+            <span className="au-badge au-badge--brand">
+              3 новых
+            </span>
           </div>
 
-          <div className="mt-3.5 space-y-2.5">
-            {mockAcademicSubjects.map((sub) => (
-              <div key={sub.name} className="space-y-1">
-                <div className="flex items-center justify-between text-xs gap-2">
-                  <span className="font-medium text-foreground truncate min-w-0 flex-1">
-                    {sub.name}
+          <div className="mt-3 space-y-2.5">
+            {mockCampusAnnouncements.slice(0, 2).map((ann) => (
+              <div
+                key={ann.id}
+                className="rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-3 transition"
+              >
+                <div className="flex items-center justify-between gap-1.5">
+                  <span className="au-badge au-badge--brand text-[9px]">
+                    {ann.category}
                   </span>
-                  <span className="font-mono text-[11px] font-bold text-foreground shrink-0">
-                    {sub.currentPoints}/100
+                  <span className="font-mono text-[10px] text-[var(--ui-color-text-muted)]">
+                    {ann.date}
                   </span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-primary"
-                    style={{ width: `${sub.currentPoints}%` }}
-                  />
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-fg-muted font-mono">
-                  <span>Посещаемость: {sub.attendancePercent}%</span>
-                  <span className="shrink-0">{sub.examType}</span>
-                </div>
+                <h4 className="mt-1.5 text-xs font-semibold text-[var(--ui-color-text)]">
+                  {ann.title}
+                </h4>
+                <p className="mt-1 text-xs text-[var(--ui-color-text-soft)] line-clamp-2">
+                  {ann.content}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* 4. Campus Announcements Stream */}
-      <div className="rounded-xl border border-border bg-elevated/80 p-3.5 shadow-xs backdrop-blur-md transition-colors sm:p-5">
-        <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-fg-muted">
-              Объявления деканата и новости кампуса
-            </h3>
-            <p className="mt-0.5 text-xs text-foreground/80">
-              Важная информация об учебном процессе, мероприятиях и хакатонах
-            </p>
-          </div>
-          <span className="text-[11px] font-mono text-fg-muted">3 новых</span>
-        </div>
+      {/* 4. Lesson Details Modal from Storybook (Schedule/Lesson Details Modal - InformationAboutLesson) */}
+      {selectedLesson && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setSelectedLesson(null)}
+        >
+          <div
+            className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-5 sm:p-6 shadow-2xl text-[var(--ui-color-text)]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between border-b border-[var(--ui-color-border)] pb-4">
+              <div className="min-w-0 pr-3">
+                <div className="flex items-center gap-2">
+                  <span className="au-badge au-badge--brand">
+                    {selectedLesson.typeLabel}
+                  </span>
+                  {selectedLesson.status === "current" && (
+                    <span className="au-badge au-badge--success">
+                      Идет сейчас
+                    </span>
+                  )}
+                </div>
+                <h3 className="mt-2 text-base sm:text-lg font-bold text-[var(--ui-color-text)] leading-snug">
+                  {selectedLesson.title}
+                </h3>
+              </div>
 
-        <div className="mt-3.5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {mockCampusAnnouncements.map((ann) => (
-            <div
-              key={ann.id}
-              className="flex flex-col justify-between rounded-xl border border-border/70 bg-muted/30 p-3 sm:p-3.5 transition hover:border-border-strong"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-1.5">
-                  <span
-                    className={`rounded border px-1.5 py-0.2 text-[9px] font-bold uppercase tracking-wider ${ann.categoryTone}`}
-                  >
-                    {ann.category}
-                  </span>
-                  <span className="font-mono text-[10px] text-fg-muted">
-                    {ann.date}
-                  </span>
+              <button
+                type="button"
+                onClick={() => setSelectedLesson(null)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)] cursor-pointer transition active:scale-95 shrink-0"
+                aria-label="Закрыть"
+              >
+                <CloseIcon className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body: Details Sections */}
+            <div className="mt-4 space-y-4 text-xs sm:text-sm">
+              {/* Time & Day */}
+              <div className="flex items-center gap-3 rounded-xl bg-[var(--ui-color-surface-soft)] p-3">
+                <ClockIcon className="w-5 h-5 text-[var(--ui-color-brand-strong)] shrink-0" />
+                <div>
+                  <span className="block text-[11px] text-[var(--ui-color-text-muted)]">Время проведения:</span>
+                  <strong className="text-[var(--ui-color-text)] font-semibold">
+                    {selectedLesson.timeStart} – {selectedLesson.timeEnd} ({activeDay.dayName}, {activeDay.dateStr})
+                  </strong>
+                </div>
+              </div>
+
+              {/* Location & Navigation */}
+              <div className="flex items-start justify-between gap-3 rounded-xl border border-[var(--ui-color-border)] p-3.5">
+                <div className="flex items-start gap-3">
+                  <MapPinIcon className="w-5 h-5 text-[var(--ui-color-icon-accent)] mt-0.5 shrink-0" />
+                  <div>
+                    <span className="block text-[11px] text-[var(--ui-color-text-muted)]">Аудитория и корпус:</span>
+                    <strong className="text-[var(--ui-color-text-accent)] font-semibold text-sm">
+                      {selectedLesson.room}
+                    </strong>
+                    <p className="text-xs text-[var(--ui-color-text-muted)] mt-0.5">
+                      {selectedLesson.campus}
+                    </p>
+                  </div>
                 </div>
 
-                <h4 className="mt-2 text-xs font-bold text-foreground leading-snug">
-                  {ann.title}
-                </h4>
-
-                <p className="mt-1 text-xs text-foreground/80 leading-relaxed line-clamp-3">
-                  {ann.content}
-                </p>
+                <a
+                  href="https://map.fa.ru"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1 rounded-lg border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] px-2.5 py-1.5 text-xs font-medium text-[var(--ui-color-text)] hover:border-[var(--ui-color-brand-border)] hover:text-[var(--ui-color-text-accent)] transition shrink-0"
+                >
+                  <span>На карте</span>
+                  <ExternalLinkIcon className="w-3 h-3" />
+                </a>
               </div>
 
-              <div className="mt-3 border-t border-border/40 pt-2 text-[10px] font-mono text-fg-muted">
-                Источник: <strong className="text-foreground">{ann.author}</strong>
+              {/* Teacher Contact Row */}
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-[var(--ui-color-border)] p-3.5">
+                <div className="flex items-center gap-3">
+                  <UserIcon className="w-5 h-5 text-[var(--ui-color-text-muted)] shrink-0" />
+                  <div>
+                    <span className="block text-[11px] text-[var(--ui-color-text-muted)]">Преподаватель:</span>
+                    <strong className="text-[var(--ui-color-text)] font-semibold">
+                      {selectedLesson.teacher}
+                    </strong>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => copyTeacherEmail("smirnov.av@fa.ru")}
+                  className="flex items-center gap-1.5 rounded-lg border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] px-2.5 py-1.5 text-xs font-medium text-[var(--ui-color-text)] hover:border-[var(--ui-color-brand-border)] hover:text-[var(--ui-color-text-accent)] transition cursor-pointer active:scale-95 shrink-0"
+                  title="Написать преподавателю"
+                >
+                  <MailIcon className="w-3.5 h-3.5 text-[var(--ui-color-brand-strong)]" />
+                  <span>Контакт</span>
+                </button>
+              </div>
+
+              {copyFeedback && (
+                <p className="text-xs text-[var(--ui-color-status-success-text)] font-medium text-center">
+                  {copyFeedback}
+                </p>
+              )}
+
+              {/* Subgroup Selector from Storybook lesson-variant-selector */}
+              <div className="rounded-xl border border-[var(--ui-color-border)] p-3.5 space-y-2">
+                <span className="block text-[11px] font-semibold text-[var(--ui-color-text-muted)] uppercase tracking-wider">
+                  Подгруппа / Вариант занятия:
+                </span>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSubgroup("all")}
+                    className={`rounded-lg p-2 text-xs font-medium transition cursor-pointer border ${
+                      selectedSubgroup === "all"
+                        ? "border-[var(--ui-color-brand-strong)] bg-[var(--ui-color-brand-soft)] text-[var(--ui-color-text-accent)] font-bold"
+                        : "border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)]"
+                    }`}
+                  >
+                    Вся группа
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSubgroup("sub1")}
+                    className={`rounded-lg p-2 text-xs font-medium transition cursor-pointer border ${
+                      selectedSubgroup === "sub1"
+                        ? "border-[var(--ui-color-brand-strong)] bg-[var(--ui-color-brand-soft)] text-[var(--ui-color-text-accent)] font-bold"
+                        : "border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)]"
+                    }`}
+                  >
+                    1 подгруппа
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSubgroup("sub2")}
+                    className={`rounded-lg p-2 text-xs font-medium transition cursor-pointer border ${
+                      selectedSubgroup === "sub2"
+                        ? "border-[var(--ui-color-brand-strong)] bg-[var(--ui-color-brand-soft)] text-[var(--ui-color-text-accent)] font-bold"
+                        : "border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)]"
+                    }`}
+                  >
+                    2 подгруппа
+                  </button>
+                </div>
               </div>
             </div>
-          ))}
+
+            {/* Modal Footer Actions */}
+            <div className="mt-5 flex items-center justify-end gap-2 border-t border-[var(--ui-color-border)] pt-4">
+              <button
+                type="button"
+                onClick={() => setSelectedLesson(null)}
+                className="rounded-xl border border-[var(--ui-color-border)] px-4 py-2 text-xs font-semibold text-[var(--ui-color-text)] hover:bg-[var(--ui-color-surface-soft)] transition cursor-pointer active:scale-95"
+              >
+                Закрыть
+              </button>
+              <a
+                href="https://online.fa.ru"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-xl bg-[var(--ui-color-brand)] px-4 py-2 text-xs font-bold text-[var(--ui-color-on-brand)] hover:bg-[var(--ui-color-brand-strong)] transition cursor-pointer active:scale-95 shadow-xs"
+              >
+                Материалы в ЭИОС →
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 5. Kiosk Certificate Order Modal */}
       {orderModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-3 sm:p-4 backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4 backdrop-blur-md"
           role="dialog"
           aria-modal="true"
           onClick={() => setOrderModalOpen(false)}
         >
           <div
-            className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-elevated p-4 sm:p-5 shadow-2xl text-foreground"
+            className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface)] p-5 shadow-2xl text-[var(--ui-color-text)]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-border pb-3">
+            <div className="flex items-center justify-between border-b border-[var(--ui-color-border)] pb-3">
               <div>
-                <span className="rounded bg-primary/20 text-primary px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                <span className="au-badge au-badge--brand">
                   Киоск самообслуживания
                 </span>
-                <h3 className="font-brand mt-1 text-sm sm:text-base font-bold text-foreground">
+                <h3 className="mt-1 text-base font-bold text-[var(--ui-color-text)]">
                   Заказ справок и документов
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setOrderModalOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-muted/60 text-fg-muted hover:text-foreground cursor-pointer transition active:scale-95"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)] cursor-pointer transition active:scale-95"
               >
                 <CloseIcon className="w-4 h-4" />
               </button>
@@ -634,24 +848,24 @@ export function BifrostStudentScreen() {
 
             {orderSuccess ? (
               <div className="py-8 text-center space-y-2">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-ok/20 text-ok">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--ui-color-status-success-bg)] text-[var(--ui-color-status-success-text)]">
                   <CheckCircleIcon className="w-6 h-6" />
                 </div>
-                <h4 className="text-sm font-bold text-foreground">Заявка успешно принята!</h4>
-                <p className="text-xs text-fg-muted">
+                <h4 className="text-sm font-bold text-[var(--ui-color-text)]">Заявка успешно принята!</h4>
+                <p className="text-xs text-[var(--ui-color-text-muted)]">
                   Справка будет сформирована и подписана ЭЦП в течение 24 часов. Уведомление придет в Telegram-бот.
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleOrderSubmit} className="mt-4 space-y-3 sm:space-y-3.5">
+              <form onSubmit={handleOrderSubmit} className="mt-4 space-y-3.5">
                 <div>
-                  <label className="block text-xs font-semibold text-fg-muted mb-1">
+                  <label className="block text-xs font-semibold text-[var(--ui-color-text-muted)] mb-1">
                     Тип необходимого документа:
                   </label>
                   <select
                     value={certType}
                     onChange={(e) => setCertType(e.target.value)}
-                    className="w-full rounded-lg border border-border bg-muted/60 px-3 py-2 text-xs text-foreground focus:border-primary focus:outline-none"
+                    className="w-full rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] px-3 py-2 text-xs text-[var(--ui-color-text)] focus:border-[var(--ui-color-brand-strong)] focus:outline-none"
                   >
                     <option>Справка об обучении с гербовой печатью</option>
                     <option>Выписка текущих оценок (транскрипт)</option>
@@ -661,44 +875,44 @@ export function BifrostStudentScreen() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-fg-muted mb-1">
+                  <label className="block text-xs font-semibold text-[var(--ui-color-text-muted)] mb-1">
                     Учебная группа и студент:
                   </label>
                   <input
                     type="text"
                     disabled
                     value={`${selectedGroup} · Студент ИТС`}
-                    className="w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-xs text-fg-muted"
+                    className="w-full rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] px-3 py-2 text-xs text-[var(--ui-color-text-muted)]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-fg-muted mb-1">
+                  <label className="block text-xs font-semibold text-[var(--ui-color-text-muted)] mb-1">
                     Формат получения:
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <label className="flex items-center gap-2 rounded-lg border border-primary bg-primary/10 p-2 cursor-pointer font-medium text-foreground">
-                      <input type="radio" name="format" defaultChecked className="accent-primary" />
-                      <span>В электронном виде с ЭЦП</span>
+                    <label className="flex items-center gap-2 rounded-xl border border-[var(--ui-color-brand-strong)] bg-[var(--ui-color-brand-soft)] p-2.5 cursor-pointer font-medium text-[var(--ui-color-text)]">
+                      <input type="radio" name="format" defaultChecked className="accent-[var(--ui-color-brand-strong)]" />
+                      <span>С ЭЦП онлайн</span>
                     </label>
-                    <label className="flex items-center gap-2 rounded-lg border border-border bg-muted/40 p-2 cursor-pointer text-fg-muted">
-                      <input type="radio" name="format" className="accent-primary" />
-                      <span>Бумажный оригинал в деканате</span>
+                    <label className="flex items-center gap-2 rounded-xl border border-[var(--ui-color-border)] bg-[var(--ui-color-surface-soft)] p-2.5 cursor-pointer text-[var(--ui-color-text-muted)]">
+                      <input type="radio" name="format" className="accent-[var(--ui-color-brand-strong)]" />
+                      <span>Бумажный оригинал</span>
                     </label>
                   </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end gap-2 pt-2 border-t border-border/60">
+                <div className="mt-4 flex items-center justify-end gap-2 pt-2 border-t border-[var(--ui-color-border)]">
                   <button
                     type="button"
                     onClick={() => setOrderModalOpen(false)}
-                    className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-fg-muted hover:text-foreground cursor-pointer transition active:scale-95"
+                    className="rounded-xl border border-[var(--ui-color-border)] px-3.5 py-1.5 text-xs font-medium text-[var(--ui-color-text-muted)] hover:text-[var(--ui-color-text)] cursor-pointer transition active:scale-95"
                   >
                     Отмена
                   </button>
                   <button
                     type="submit"
-                    className="rounded-lg bg-primary px-4 py-1.5 text-xs font-bold text-[#042428] hover:opacity-90 shadow-xs cursor-pointer active:scale-95 transition"
+                    className="rounded-xl bg-[var(--ui-color-brand)] px-4 py-1.5 text-xs font-bold text-[var(--ui-color-on-brand)] hover:bg-[var(--ui-color-brand-strong)] shadow-xs cursor-pointer active:scale-95 transition"
                   >
                     Подтвердить заказ
                   </button>
